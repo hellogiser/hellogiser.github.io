@@ -40,4 +40,7 @@ plot(v, pl=F,
      main="Variogram and Fitted Model\n Box-Cox Transformed SOC",
      xlab="Distance (m)",
      ylab="Semivariance")
-     ···
+```
+
+![xcxc](../assets/img/test/3_1_9.png)
+
