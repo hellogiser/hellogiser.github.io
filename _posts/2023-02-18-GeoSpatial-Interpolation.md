@@ -42,5 +42,5 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-![xcxc](../assets/img/test/3_1_9.png)
+![xcxc](../../assets/img/test/3_1_9.png)
 
