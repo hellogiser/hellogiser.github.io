@@ -9,4 +9,4 @@ order: 4
 
 ## Kai Ren
 
-![](../assets/mine/)
+![](../assets/mine/avatar.jpg)
