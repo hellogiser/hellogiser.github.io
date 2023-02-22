@@ -1,6 +1,6 @@
 ---
 title: R 中的地理空间插值
-date: 2023-02-18 12:34:12 +/-TTTT
+date: 2023-02-18 12:34:12 +0800
 categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
