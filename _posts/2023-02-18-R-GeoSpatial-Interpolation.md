@@ -5,9 +5,9 @@ categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
 
-原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
-
-全部机翻，如有错误，以你的感觉为准。
+> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
+>
+> 全部机翻，如有错误，以你的感觉为准。
 
 ----
 
@@ -1564,7 +1564,7 @@ grid.arrange(p3,p4, ncol = 2)  # Multiplot
 
 上图显示了土壤 SOC 的插值图，在每个预测网格上都具有相关的误差。CK 预测图显示了 SOC 浓度的全球模式和热点位置。kriging 方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。
 
-### 回归克里金
+### 2.2.4. 回归克里金
 
 回归 kriging (RK) 在数学上等效于通用 kriging 或带有外部漂移的 kriging，其中辅助预测器直接用于求解 kriging 权重。回归 kriging 将回归模型与回归残差的简单 kriging 相结合。首先计算并建模残差的实验变异函数，然后将简单的克里金法 (SK) 应用于残差，以给出残差的空间预测。
 
@@ -1600,7 +1600,7 @@ grid<-read.csv(paste0(dataFolder, "GP_prediction_grid_data.csv"), header= TRUE)
 
 首先，我们将创建一个具有 SOC 和连续环境数据的 `data.frame`。
 
-##### 幂变换
+##### 2.2.4.0.1. 幂变换
 
 ```R
 powerTransform(train$SOC)
@@ -1610,7 +1610,7 @@ powerTransform(train$SOC)
 train$SOC.bc<-bcPower(train$SOC, 0.2523339)
 ```
 
-##### 创建 dataframes
+##### 2.2.4.0.2. 创建 dataframes
 
 ```R
 # train data
@@ -1631,14 +1631,14 @@ coordinates(train.xy) = ~x+y
 coordinates(grid.xy) = ~x+y
 ```
 
-##### 开始foreach并行化以进行模型拟合
+##### 2.2.4.0.3. 开始foreach并行化以进行模型拟合
 
 ```R
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 ```
 
-##### 设置控制参数
+##### 2.2.4.0.4. 设置控制参数
 
 ```R
 myControl <- trainControl(method="repeatedcv", 
@@ -1647,13 +1647,13 @@ myControl <- trainControl(method="repeatedcv",
                           allowParallel = TRUE)
 ```
 
-#### 广义线性模型
+#### 2.2.4.1. 广义线性模型
 
 广义线性模型 (GLM) 是普通线性回归的灵活概括，它允许响应变量具有除正态分布之外的误差分布模型。
 
 首先将GLM模型与一个综合的环境协变量进行拟合，然后，我们将计算和建模 GLM 模型的残差的变异函数，然后将简单的克里金法 (SK) 应用于残差估计残差的空间预测 (区域趋势)。最后，GLM回归预测结果，将添加SK克里格残差来估计插值土壤有机碳。
 
-##### 拟合广义线性模型 (GLM)
+##### 2.2.4.1.1. 拟合广义线性模型 (GLM)
 
 ```R
 set.seed(1856)
@@ -1677,7 +1677,7 @@ print(GLM)
 #   0.9423772  0.4742412  0.7310591
 ```
 
-##### GLM 残差的变异函数建模
+##### 2.2.4.1.2. GLM 残差的变异函数建模
 
 首先，我们必须提取 GLM 模型的残差，我们将使用 ***resid()*** 函数来获取 GLM 模型的残差。
 
@@ -1712,7 +1712,7 @@ plot(v.glm, pl=F,
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_1.png)
 
-##### 网格位置的GLM预测
+##### 2.2.4.1.3. 网格位置的GLM预测
 
 ```R
 grid.xy$GLM <- predict(GLM, grid.df)
@@ -1729,7 +1729,7 @@ SK.GLM<-krige(residuals.glm~ 1,
 # [using simple kriging]
 ```
 
-##### 克里金法预测 (SK + 回归预测)
+##### 2.2.4.1.4. 克里金法预测 (SK + 回归预测)
 
 ```R
 grid.xy$SK.GLM<-SK.GLM$var1.pred
@@ -1737,7 +1737,7 @@ grid.xy$SK.GLM<-SK.GLM$var1.pred
 grid.xy$RK.GLM.bc<-(grid.xy$GLM+grid.xy$SK.GLM)
 ```
 
-##### 逆变换
+##### 2.2.4.1.5. 逆变换
 
 对于逆变换，我们使用变换参数：
 
@@ -1763,7 +1763,7 @@ summary(grid.xy)
 #  Max.   :10999   Max.   : 4.2655   Max.   : 1.663093   Max.   : 4.995   Max.   :25.3268  
 ```
 
-##### 转换为栅格
+##### 2.2.4.1.6. 转换为栅格
 
 ```R
 GLM<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "GLM")])
@@ -1772,7 +1772,7 @@ RK.GLM.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.GLM.bc")])
 RK.GLM.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.GLM")])
 ```
 
-##### 绘制预测 SOC
+##### 2.2.4.1.7. 绘制预测 SOC
 
 ```R
 glm1<-ggR(GLM, geom_raster = TRUE) +
@@ -1828,13 +1828,13 @@ grid.arrange(glm1,glm2,glm3,glm4, ncol = 4)  # Multiplot
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_2.png)
 
-#### 随机森林
+#### 2.2.4.2. 随机森林
 
 基于决策树的多次迭代组合的随机森林已经成为一种主要的数据分析工具，与单次迭代分类和回归树分析相比表现良好 [Heidema等，2006]。每棵树都是通过引导原始数据集制成的，该原始数据集允许使用剩余的测试集 (所谓的袋外 (Out-Of-Bag，OOB) 样本) 进行稳健的误差估计。从引导样本中预测排除的 OOB 样本，并通过组合所有树的 OOB 预测。RF 算法可以优于线性回归，与线性回归不同，RF 没有考虑目标变量的概率密度函数形式的要求 [Hengl等，2015; Kuhn和Johnson，2013]。RF 的一个主要缺点是难以解释响应和预测变量之间的关系。但是，RF 允许通过置换 OOB 变量之前和之后预测精度的平均下降来估计变量的重要性。然后在所有树上对两者之间的差异进行平均，并通过差异的标准偏差进行归一化 (Ahmed等，2017)。
 
 首先，用一个综合的环境协变量拟合 RF 模型，然后，我们将计算和建模 RF 模型残差的变异函数，然后将简单的克里金法 (SK) 应用于残差，以估计空间预测残差 (区域趋势)。最后，RF 回归预测结果，将添加 SK 克里格残差来估计插值土壤有机碳。
 
-##### 拟合随机森林模型 (RF)
+##### 2.2.4.2.1. 拟合随机森林模型 (RF)
 
 ```R
 set.seed(1856)
@@ -1864,7 +1864,7 @@ print(RF)
 # Tuning parameter 'mtry' was held constant at a value of 3.316625
 ```
 
-##### RF 残差的变异函数建模
+##### 2.2.4.2.2. RF 残差的变异函数建模
 
 首先，我们必须提取 RF 模型的残差，我们将使用 ***resid()*** 函数来获取 RF 模型的残差。
 
@@ -1899,7 +1899,7 @@ plot(v.rf, pl=F,
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_3.png)
 
-##### 网格位置的预测
+##### 2.2.4.2.3. 网格位置的预测
 
 ```R
 grid.xy$RF <- predict(RF, grid.df)
@@ -1916,7 +1916,7 @@ SK.RF<-krige(residuals.rf~ 1,
 # [using simple kriging]
 ```
 
-##### 克里金法预测 (SK + 回归)
+##### 2.2.4.2.4. 克里金法预测 (SK + 回归)
 
 ```R
 grid.xy$SK.RF<-SK.RF$var1.pred
@@ -1924,7 +1924,7 @@ grid.xy$SK.RF<-SK.RF$var1.pred
 grid.xy$RK.RF.bc<-(grid.xy$RF+grid.xy$SK.RF)
 ```
 
-##### 逆变换
+##### 2.2.4.2.5. 逆变换
 
 对于逆变换，我们使用变换参数：
 
@@ -1957,7 +1957,7 @@ summary(grid.xy)
 #  Max.   : 4.6236   Max.   : 1.0526308   Max.   : 5.2743   Max.   :28.6076 
 ```
 
-##### 转换为栅格
+##### 2.2.4.2.6. 转换为栅格
 
 ```R
 RF<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RF")])
@@ -1966,7 +1966,7 @@ RK.RF.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.RF.bc")])
 RK.RF.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.RF")])
 ```
 
-##### 绘制预测 SOC
+##### 2.2.4.2.7. 绘制预测 SOC
 
 ```R
 rf1<-ggR(RF, geom_raster = TRUE) +
@@ -2022,7 +2022,7 @@ grid.arrange(rf1,rf2,rf3,rf4, ncol = 4)  # Multiplot
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_4.png)
 
-#### 元集成机器学习
+#### 2.2.4.3. 元集成机器学习
 
 集成机器学习方法使用多种学习算法来获得比从任何组成学习算法获得的更好的预测性能。许多流行的现代机器学习算法都是集合。例如，随机森林和梯度提升机都是集合学习器。但是，堆叠泛化或堆叠或超级学习 (Wolpert，1992) 引入了元学习器的概念，该概念将多个强大的，不同的机器学习模型集合或组合在一起以获得更好的预测。在这种建模方法中，首先训练每个基本级别模型，然后在基本级别模型的输出上训练元模型。基本级别模型通常由不同的学习算法组成，因此堆叠集合通常是异构的。
 
@@ -2030,13 +2030,13 @@ grid.arrange(rf1,rf2,rf3,rf4, ncol = 4)  # Multiplot
 
 我们将 GLM 和 RF 回归模型(子模型)叠加，建立随机森林 (RF) 回归模型来预测 SOC。
 
-##### 创建模型列表
+##### 2.2.4.3.1. 创建模型列表
 
 ```R
 algorithmList <- c("glm","rf")
 ```
 
-##### 拟合所有模型
+##### 2.2.4.3.2. 拟合所有模型
 
 我们将使用 **caretEnsemble** 包的 ***caretList()*** 功能来拟合所有模型。
 
@@ -2048,7 +2048,7 @@ models<-caretList(train.x, RESPONSE,
                   preProc=c('center', 'scale'))
 ```
 
-##### 子模型的性能
+##### 2.2.4.3.3. 子模型的性能
 
 ```R
 results.all <- resamples(models)
@@ -2076,7 +2076,7 @@ summary(results.all)
 # rf  0.2138578 0.4080458 0.4848379 0.4868120 0.5505441 0.7026729    0
 ```
 
-##### 绘制 K 折交叉验证结果 (MAE，RMSE，R2)
+##### 2.2.4.3.4. 绘制 K 折交叉验证结果 (MAE，RMSE，R2)
 
 ```R
 dotplot(results.all, 
@@ -2087,7 +2087,7 @@ dotplot(results.all,
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_6.png)
 
-##### 通过叠加来组合几个预测模型
+##### 2.2.4.3.5. 通过叠加来组合几个预测模型
 
 对于随机森林回归模型，我们将使用带有 `method` 和 `rf` 参数的 ***caretStack()*** 函数:
 
@@ -2103,7 +2103,7 @@ stack.rf <- caretStack(models,
 # note: only 1 unique complexity parameters in default grid. Truncating the grid to 1 .
 ```
 
-##### 集合结果
+##### 2.2.4.3.6. 集合结果
 
 ```R
 stack.rf.cv<-stack.rf$ens_model$resample
@@ -2127,7 +2127,7 @@ stack.rf.results<-print(stack.rf)
 # Tuning parameter 'mtry' was held constant at a value of 2
 ```
 
-##### 残差的变异函数建模
+##### 2.2.4.3.7. 残差的变异函数建模
 
 现在，我们将计算 RF 模型的残差，因为 ***resid()*** 函数在这里不起作用。
 
@@ -2163,7 +2163,7 @@ plot(v.stack, pl=F,
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_7.png)
 
-##### 网格位置的预测
+##### 2.2.4.3.8. 网格位置的预测
 
 ```R
 grid.xy$stack <- predict(stack.rf, grid.df)
@@ -2180,7 +2180,7 @@ SK.stack<-krige(residuals.stack~ 1,
 # [using simple kriging]
 ```
 
-##### 克里金法预测 (SK + 回归)
+##### 2.2.4.3.9. 克里金法预测 (SK + 回归)
 
 ```R
 grid.xy$SK.stack<-SK.stack$var1.pred
@@ -2188,7 +2188,7 @@ grid.xy$SK.stack<-SK.stack$var1.pred
 grid.xy$RK.stack.bc<-(grid.xy$stack+grid.xy$SK.stack)
 ```
 
-##### 逆变换
+##### 2.2.4.3.10. 逆变换
 
 ```R
 k1<-1/0.2523339                                   
@@ -2226,7 +2226,7 @@ summary(grid.xy)
 #  Max.   : 5.223   Max.   : 0.17909   Max.   : 5.202   Max.   :27.7264  
 ```
 
-##### 转换为栅格
+##### 2.2.4.3.11. 转换为栅格
 
 ```R
 stack<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "stack")])
@@ -2235,7 +2235,7 @@ RK.stack.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.stack.bc")])
 RK.stack.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.stack")])
 ```
 
-##### 绘制预测 SOC
+##### 2.2.4.3.12. 绘制预测 SOC
 
 ```R
 s1<-ggR(stack, geom_raster = TRUE) +
@@ -2291,7 +2291,7 @@ grid.arrange(s1,s2,s3,s4, ncol = 4)  # Multiplot
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_8.png)
 
-### 指示克里金
+### 2.2.5. 指示克里金
 
 指示 kriging (IK) 是一种非参数地统计学方法，它对预先定义的阈值进行指标变换 (0,1) 后的变量进行工作，并映射超过预先定义的阈值的概率。这对于概率决策是直接有用的。它还可以用于估计整个累积概率分布 (CDF)，并且CDF的平均值 (E型估计) 可以用作对分布的上尾和下尾进行建模之后的污染物浓度的估计 (Goovaerts，2009)。基于CDF的IK适用于数据强烈偏斜时，传统的数据转换限制了由于极端值而获得稳健的统计数据和估计量。
 
@@ -2327,7 +2327,7 @@ grid<-read.csv(paste0(dataFolder,"bd_grid.csv"), header= TRUE)
 bd<-shapefile(paste0(dataFolder,"BD_Banladesh_BUTM.shp"))
 ```
 
-##### 探索性数据分析
+##### 2.2.5.0.1. 探索性数据分析
 
 ```R
 summary(df$As)
@@ -2347,7 +2347,7 @@ par(mfrow=c(1,1))
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_1.png)
 
-##### 创建 SPDF
+##### 2.2.5.0.2. 创建 SPDF
 
 所有采样位置都在地理坐标系统中，因此我们需要在投影坐标系中转换数据 (Albers等面积Conic NAD1983)
 
@@ -2381,7 +2381,7 @@ head(mf)
 # 6 438852.0 2576967       STW 0.5 0.042
 ```
 
-##### 指标变换
+##### 2.2.5.0.3. 指标变换
 
 现在，我们使用以下公式计算阈值400 ppm Pb的指标变量。如果连续变量的值低于定义的阈值，则连续变量的指标为1，否则为0。
 
@@ -2407,7 +2407,7 @@ coordinates(ik.df)=~x+y
 coordinates(grid) = ~x+y
 ```
 
-##### 地图数据
+##### 2.2.5.0.4. 地图数据
 
 ```R
 spplot(ik.df, zcol = "As", col.regions = c("green", "orange", "red"), cex=.5,
@@ -2426,7 +2426,7 @@ grid.arrange(p1, p2, ncol=2)
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_3.png)
 
-##### 指示变异函数
+##### 2.2.5.0.5. 指示变异函数
 
 ```R
 ik.df <- ik.df[-zerodist(ik.df)[,1],] 
@@ -2449,7 +2449,7 @@ m.f.50
 # 2   Exp 0.1030162 56236.76
 ```
 
-##### 绘制变量图和拟合模型
+##### 2.2.5.0.6. 绘制变量图和拟合模型
 
 ```R
 #### Plot varigram and fitted model:
@@ -2479,7 +2479,7 @@ grid.arrange(v1, v2, nrow = 1)
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_4.png)
 
-##### 交叉验证
+##### 2.2.5.0.7. 交叉验证
 
 我们将计算As浓度大于10和5 ppb的IK预测的留一交叉验证 (LOOCV)。它的工作原理与参数克里金法相同: 保持一个点，从其他点预测其真实指标的概率，然后将该概率与指标的实际值进行比较。
 
@@ -2488,7 +2488,7 @@ cv.10 <- krige.cv(ik.10 ~ 1, loc = ik.df, model = m.f.10, nfold=5)
 cv.50 <- krige.cv(ik.50 ~ 1, loc = ik.df, model = m.f.50, nfold=5)
 ```
 
-##### 将预测概率限制在以下范围内:
+##### 2.2.5.0.8. 将预测概率限制在以下范围内:
 
 ```R
 cv.10$var1.pred <- pmin(1, cv.10$var1.pred)
@@ -2570,7 +2570,7 @@ par(mfrow=c(1,1))
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_5.png)
 
-##### 网格位置的 IK 预测
+##### 2.2.5.0.9. 网格位置的 IK 预测
 
 ```R
 ik.grid.10<-krige(ik.10~ 1, nmax=50,
@@ -2623,7 +2623,7 @@ summary(ik.grid.10)
 #  Max.   : 1.000148   Max.   :0.2436  
 ```
 
-##### 将预测概率限制在以下范围内:
+##### 2.2.5.0.10. 将预测概率限制在以下范围内:
 
 ```R
 ik.grid.10$var1.pred <- pmin(1, ik.grid.10$var1.pred)
@@ -2668,14 +2668,14 @@ summary(ik.grid.10)
 #  Max.   :1.00000   Max.   :0.2436  
 ```
 
-##### 转换为栅格
+##### 2.2.5.0.11. 转换为栅格
 
 ```R
 p10<-rasterFromXYZ(as.data.frame(ik.grid.10)[, c("x", "y", "var1.pred")])
 p50<-rasterFromXYZ(as.data.frame(ik.grid.50)[, c("x", "y", "var1.pred")])
 ```
 
-##### 绘制概率图
+##### 2.2.5.0.12. 绘制概率图
 
 为了绘制地图，我们将使用 **rasterVis** 包的 ***levelplot()*** 函数。
 
@@ -2711,7 +2711,7 @@ grid.arrange(ik.plot.10, ik.plot.50, nrow = 1)
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_6.png)
 
-# 空间预测质量评估
+# 3. 空间预测质量评估
 
 空间插值或预测模型的准确性至关重要，因为它决定了插值值的质量。与空间预测的准确性评估相比，开发空间预测模型要容易得多，但是通常情况下，空间预测模型仍然未知。
 
@@ -2725,7 +2725,7 @@ grid.arrange(ik.plot.10, ik.plot.50, nrow = 1)
 - 使用独立数据集进行验证
 - 空间不确定性的条件模拟
 
-### 交叉验证
+### 3.0.1. 交叉验证
 
 交叉验证是一种重新抽样的过程，用于在有限的数据样本上评估模型。它优于残差评价。两种主要的交叉验证技术通常用于模型评估: 1) K-fold 交叉验证（K-fold cross validation）； 2)留一交叉验证（Leave-one-out cross validation）。
 
@@ -2752,7 +2752,7 @@ dataFolder<-"D:\\Env\\DATA_08\\"
 train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE) 
 ```
 
-##### 数据变换
+##### 3.0.1.0.1. 数据变换
 
 幂变换使用 Box和Cox (1964) 的最大似然方法来选择针对正态性的单变量或多变量响应的变换。首先，我们必须使用 car 包的 ***powerTransform()*** 函数计算适当的转换参数，然后使用此参数使用 ***bcPower()*** 函数对数据进行转换。
 
@@ -2766,7 +2766,7 @@ train$SOC.bc<-bcPower(train$SOC, 0.2523339)
 coordinates(train) = ~x+y
 ```
 
-##### 变异函数建模
+##### 3.0.1.0.2. 变异函数建模
 
 ```R
 # Variogram
@@ -2781,7 +2781,7 @@ m.f
 # 2   Exp 1.0816886 82374.23
 ```
 
-#### K-fold 交叉验证
+#### 3.0.1.1. K-fold 交叉验证
 
 我们将使用 k-fold 交叉验证对模型进行评估。我们将使用 ***krige.cv()*** 函数。
 
@@ -2816,7 +2816,7 @@ summary(cv)
 #  Max.   : 2.994699   Max.   :10.000  
 ```
 
-##### 残差图
+##### 3.0.1.1.1. 残差图
 
 ```R
 bubble(cv, zcol = "residual", maxsize = 2.0,  main = "K-fold Cross-validation residuals")
@@ -2844,7 +2844,7 @@ MSDR
 # [1] 1.03143
 ```
 
-#### 实际值 vs 预测值: 线性回归
+#### 3.0.1.2. 实际值 vs 预测值: 线性回归
 
 比较实际值与预测值的另一种方法是在它们之间进行线性回归。理想情况下，这将是一条1:1 的线: 截距为 0 (无偏差)，斜率设置为 1 (增益相等)。
 
@@ -2870,7 +2870,7 @@ summary(lm.cv)
 # F-statistic: 191.9 on 1 and 366 DF,  p-value: < 2.2e-16
 ```
 
-##### 1:1 绘图
+##### 3.0.1.2.1. 1:1 绘图
 
 ```R
 par(mfrow=c(1,1))
@@ -2878,7 +2878,7 @@ par(mfrow=c(1,1))
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_3.png)
 
-#### 留一交叉验证
+#### 3.0.1.3. 留一交叉验证
 
 ```R
 cv.LOOCV<-krige.cv(SOC.bc ~ 1,
@@ -2930,7 +2930,7 @@ MSDR.LOOCV
 # [1] 1.033859
 ```
 
-### 使用独立数据集进行验证
+### 3.0.2. 使用独立数据集进行验证
 
 本节我们使用 89 个测试位置的 SOC 数据来验证来自 386 训练数据的普通 kriging 预测。由于我们不会使用测试数据集的 89 点来拟合模型或预测，因此这些都是对模型的独立测试。我们可以将预测值与实际值进行比较。
 
@@ -2954,7 +2954,7 @@ train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE)
 test<-read.csv(paste0(dataFolder,"test_data.csv"), header= TRUE) 
 ```
 
-##### 数据变换-幂变换
+##### 3.0.2.0.1. 数据变换-幂变换
 
 ```R
 powerTransform(train$SOC)
@@ -2976,7 +2976,7 @@ coordinates(train) = ~x+y
 coordinates(test) = ~x+y
 ```
 
-##### 变异函数建模
+##### 3.0.2.0.2. 变异函数建模
 
 ```R
 # Variogram
@@ -2991,7 +2991,7 @@ m.f
 # 2   Exp 1.0816886 82374.23
 ```
 
-#### 测试点的预测
+#### 3.0.2.1. 测试点的预测
 
 我们将使用 k-fold 交叉验证对模型进行评估。我们将使用 ***krige.cv()*** 函数。
 
@@ -3021,7 +3021,7 @@ summary(val)
 #  Max.   :3.8089   Max.   :1.3132 
 ```
 
-##### 计算残差
+##### 3.0.2.1.1. 计算残差
 
 ```R
 test$SOC.pred<-val$var1.pred
@@ -3029,7 +3029,7 @@ test$SOC.var<-val$var1.var
 test$residual<-(test$SOC.bc-test$SOC.pred)
 ```
 
-##### 残差图
+##### 3.0.2.1.2. 残差图
 
 ```R
 bubble(test, zcol = "residual", maxsize = 2.0,  main = "Residuals at Test Data")
@@ -3037,7 +3037,7 @@ bubble(test, zcol = "residual", maxsize = 2.0,  main = "Residuals at Test Data")
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_4.png)
 
-#### 误差
+#### 3.0.2.2. 误差
 
 ```R
 # Mean Error (ME)
@@ -3059,7 +3059,7 @@ MSDR
 # [1] 1.267439
 ```
 
-#### 实际值 vs 预测值: 线性回归
+#### 3.0.2.3. 实际值 vs 预测值: 线性回归
 
 比较实际值与预测值的另一种方法是在它们之间进行线性回归。理想情况下，这将是一条1:1 的线: 截距为0 (无偏差)，斜率设置为1 (增益相等)。
 
@@ -3085,7 +3085,7 @@ summary(lm.val)
 # F-statistic: 93.99 on 1 and 99 DF,  p-value: 5.069e-16
 ```
 
-##### 1:1 图
+##### 3.0.2.3.1. 1:1 图
 
 ```R
 plot(test$SOC.bc, test$SOC.pred,main=list("Validation at Test Locations",cex=1),
@@ -3103,7 +3103,7 @@ abline(lm.val, col = "green")
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_5.png)
 
-### 空间不确定性的条件模拟
+### 3.0.3. 空间不确定性的条件模拟
 
 该 kriging 预测图平滑了所研究属性的空间分布的局部细节，小值被高估，而大值被低估，尤其是在低采样密度的区域 (Isaaks和Srivastava 1989)。与kriging不同，条件顺序高斯模拟 (CSGS) 技术可以更好地反映现实，并消除不切实际的平滑，除了尊重原始数据值外，还着重于全局统计数据或半变异函数模型的再现 (Goovaerts 1997)。使用 csg 生成的一组替代实现提供了有关空间预测的一定程度的不确定性，该不确定性通常用于绘制所研究变量的可靠概率图 (Goovaerts 1997)。因此，csg越来越优选用于表征决策和风险分析的不确定性的 kriging，而不是像使用 kriging (Deutsch和Journel 1998) 那样产生未采样位置的最佳无偏预测。
 
@@ -3127,7 +3127,7 @@ grid<-read.csv(paste0(dataFolder, "GP_prediction_grid_data.csv"), header= TRUE)
 grid.xy<-grid[,1:3]
 ```
 
-##### 数据变换-幂变换
+##### 3.0.3.0.1. 数据变换-幂变换
 
 ```R
 powerTransform(train$SOC)
@@ -3136,7 +3136,7 @@ coordinates(train) = ~x+y
 coordinates(grid) = ~x+y
 ```
 
-##### 变异函数建模
+##### 3.0.3.0.2. 变异函数建模
 
 ```R
 # Variogram
@@ -3151,7 +3151,7 @@ m.f
 # 2   Exp 1.0816886 82374.23
 ```
 
-##### 绘制变量图和拟合模型
+##### 3.0.3.0.3. 绘制变量图和拟合模型
 
 ```R
 #### Plot varigram and fitted model:
@@ -3169,7 +3169,7 @@ plot(v, pl=F,
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_6.png)
 
-#### 普通克里金
+#### 3.0.3.1. 普通克里金
 
 ```R
 ok.soc<-krige(SOC.bc~1, 
@@ -3184,7 +3184,7 @@ k1<-1/0.2523339
 grid.xy$OK <-((ok.soc$var1.pred *0.2523339+1)^k1)
 ```
 
-#### 条件高斯模拟
+#### 3.0.3.2. 条件高斯模拟
 
 krige() 方法也可以做条件模拟。它需要一个可选的参数: `nsim` ，条件模拟的数量
 
@@ -3201,7 +3201,7 @@ sim.soc<-krige(SOC.bc~1,
 # [using conditional Gaussian simulation]
 ```
 
-#### 所有实现的半真实图
+#### 3.0.3.3. 所有实现的半真实图
 
 模拟应该尊重空间结构-与变异函数模型相同的结构。现在将产生 100 实现的变量，并绘制box-cox变换 SOC 的变量。
 
@@ -3225,18 +3225,18 @@ maxdist = max(v$dist)), col = "red",  lwd=2.0)
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_7.png)
 
-##### 逆变换
+##### 3.0.3.3.1. 逆变换
 
 ```R
 for(i in 1:length(sim.soc@data)){sim.soc@data[[i]] <- (((sim.soc[[i]]*0.2523339+1)^k1))}
 sim.data<-as.data.frame(sim.soc)
 ```
 
-#### 空间不确定性的可视化
+#### 3.0.3.4. 空间不确定性的可视化
 
 该组实现提供了有关砷浓度空间分布的不确定性的度量。实现之间的差异描述了不确定性。这种不确定性可以通过所有实现的动画显示来可视化，这允许区分在所有实现 (低不确定性) 上保持稳定的区域与在实现之间发生大波动的区域 (高不确定性)。
 
-##### 数据准备
+##### 3.0.3.4.1. 数据准备
 
 ```R
 soc=sim.data[,3:102]
@@ -3258,7 +3258,7 @@ magickPath<-shortPathName("C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI\\magick
 ani.options(convert=magickPath)
 ```
 
-##### 动画地图
+##### 3.0.3.4.2. 动画地图
 
 ```R
 saveGIF(
@@ -3274,7 +3274,7 @@ height = 600, width = 600, interval = .5, outdir = getwd())
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/animation.gif)
 
-#### 局部不确定性的度量
+#### 3.0.3.5. 局部不确定性的度量
 
 现在，我们将通过比较 E-tpye (平均值)，预期 10% 概率的条件 qauntiles图，50% (中位数) 和 90% 来测量局部不确定性。
 
@@ -3303,7 +3303,7 @@ spplot(grid.xy, c(4:5), sp.layout=list(bound), col.regions=col(20),
 
 100 实现的普通预测和 E 型估计并不相同，尽管两者都是最小二乘标准的最佳估计。
 
-##### 条件分位数图
+##### 3.0.3.5.1. 条件分位数图
 
 ```R
 spplot(grid.xy, c("q10","Median","q90"), sp.layout=list(bound), col.regions=col(20),
