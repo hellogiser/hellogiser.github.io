@@ -5,6 +5,11 @@ categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
 
+原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
+
+全部机翻，如有错误，以你的感觉为准。
+
+----
 
 作为风险评估的一个组成部分，用于预测未采样位置的值的空间插值技术已被广泛用于绘制环境变量，以识别针对管理干预措施的地理区域。空间插值方法可以分为两大类:
 
@@ -1557,75 +1562,1756 @@ grid.arrange(p3,p4, ncol = 2)  # Multiplot
 
 ![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_5_4.png)
 
-上图显示了土壤SOC的插值图，在每个预测网格上都具有相关的误差。CK预测图显示了SOC浓度的全球模式和热点位置。kriging方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。
+上图显示了土壤 SOC 的插值图，在每个预测网格上都具有相关的误差。CK 预测图显示了 SOC 浓度的全球模式和热点位置。kriging 方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。
+
+### 回归克里金
+
+回归 kriging (RK) 在数学上等效于通用 kriging 或带有外部漂移的 kriging，其中辅助预测器直接用于求解 kriging 权重。回归 kriging 将回归模型与回归残差的简单 kriging 相结合。首先计算并建模残差的实验变异函数，然后将简单的克里金法 (SK) 应用于残差，以给出残差的空间预测。
+
+在这个练习中，我们将使用以下回归模型对 SOC 进行回归克里格:
+
+- 广义线性模型
+- 随机森林
+- 元集成机器学习
+
+我们将使用插入 **caret** 包进行回归，使用 **gstat** 包进行地理统计建模。
 
 ```R
+library(plyr)
+library(dplyr)
+library(gstat)
+library(raster)
+library(ggplot2)
+library(car)
+library(classInt)
+library(RStoolbox)
+library(caret)
+library(caretEnsemble)
+library(doParallel)
+library(gridExtra)
 
+# Define data folder
+dataFolder<-"D:\\Env\\DATA_08\\"
+
+train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE) 
+state<-shapefile(paste0(dataFolder,"GP_STATE.shp"))
+grid<-read.csv(paste0(dataFolder, "GP_prediction_grid_data.csv"), header= TRUE)
+```
+
+首先，我们将创建一个具有 SOC 和连续环境数据的 `data.frame`。
+
+##### 幂变换
+
+```R
+powerTransform(train$SOC)
+## Estimated transformation parameter 
+## train$SOC 
+## 0.2523339
+train$SOC.bc<-bcPower(train$SOC, 0.2523339)
+```
+
+##### 创建 dataframes
+
+```R
+# train data
+train.xy<-train[,c(1,24,8:9)]
+train.df<-train[,c(1,24,11:21)]
+# grid data
+grid.xy<-grid[,c(1,2:3)]
+grid.df<-grid[,c(4:14)]
+#  define response & predictors
+RESPONSE<-train.df$SOC.bc
+train.x<-train.df[3:13]
+```
+
+坐标系：
+
+```R
+coordinates(train.xy) = ~x+y
+coordinates(grid.xy) = ~x+y
+```
+
+##### 开始foreach并行化以进行模型拟合
+
+```R
+mc <- makeCluster(detectCores())
+registerDoParallel(mc)
+```
+
+##### 设置控制参数
+
+```R
+myControl <- trainControl(method="repeatedcv", 
+                          number=10, 
+                          repeats=5,
+                          allowParallel = TRUE)
+```
+
+#### 广义线性模型
+
+广义线性模型 (GLM) 是普通线性回归的灵活概括，它允许响应变量具有除正态分布之外的误差分布模型。
+
+首先将GLM模型与一个综合的环境协变量进行拟合，然后，我们将计算和建模 GLM 模型的残差的变异函数，然后将简单的克里金法 (SK) 应用于残差估计残差的空间预测 (区域趋势)。最后，GLM回归预测结果，将添加SK克里格残差来估计插值土壤有机碳。
+
+##### 拟合广义线性模型 (GLM)
+
+```R
+set.seed(1856)
+GLM<-train(train.x,
+           RESPONSE,
+           method = "glm",
+           trControl=myControl,
+           preProc=c('center', 'scale'))
+print(GLM)
+# Generalized Linear Model 
+
+# 368 samples
+#  11 predictor
+
+# Pre-processing: centered (11), scaled (11) 
+# Resampling: Cross-Validated (10 fold, repeated 5 times) 
+# Summary of sample sizes: 332, 331, 331, 331, 332, 331, ... 
+# Resampling results:
+
+#   RMSE       Rsquared   MAE      
+#   0.9423772  0.4742412  0.7310591
+```
+
+##### GLM 残差的变异函数建模
+
+首先，我们必须提取 GLM 模型的残差，我们将使用 ***resid()*** 函数来获取 GLM 模型的残差。
+
+```R
+# 提取残差
+train.xy$residuals.glm<-resid(GLM)
+# Variogram
+v.glm<-variogram(residuals.glm~ 1, data = train.xy,cutoff=300000, width=300000/15)
+# Intial parameter set by eye esitmation
+m.glm<-vgm(0.15,"Exp",40000,0.05)
+# 最小二乘拟合
+m.f.glm<-fit.variogram(v.glm, m.glm)
+m.f.glm
+#   model     psill    range
+# 1   Nug 0.1085947     0.00
+# 2   Exp 0.7943117 18818.22
 ```
 
 ```R
+#### Plot varigram and fitted model:
+plot(v.glm, pl=F, 
+     model=m.f.glm,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Variogram and Fitted Model\n Residuals of GLM model",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+```
 
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_1.png)
+
+##### 网格位置的GLM预测
+
+```R
+grid.xy$GLM <- predict(GLM, grid.df)
+```
+
+网格位置GLM残差的简单克里金法预测
+
+```R
+SK.GLM<-krige(residuals.glm~ 1, 
+              loc=train.xy,        # Data frame
+              newdata=grid.xy,     # Prediction location
+              model = m.f.glm,     # fitted varigram model
+              beta = 0)            # residuals from a trend; expected value is 0 
+# [using simple kriging]
+```
+
+##### 克里金法预测 (SK + 回归预测)
+
+```R
+grid.xy$SK.GLM<-SK.GLM$var1.pred
+# 添加 RF 预测 + SK 预测残差
+grid.xy$RK.GLM.bc<-(grid.xy$GLM+grid.xy$SK.GLM)
+```
+
+##### 逆变换
+
+对于逆变换，我们使用变换参数：
+
+```R
+k1<-1/0.2523339                                   
+grid.xy$RK.GLM <-((grid.xy$RK.GLM.bc *0.2523339+1)^k1)
+summary(grid.xy)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min     max
+# x -1245285  114715
+# y  1003795 2533795
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 10674
+# Data attributes:
+#        ID             GLM              SK.GLM            RK.GLM.bc          RK.GLM       
+#  Min.   :    1   Min.   :-0.9197   Min.   :-2.663611   Min.   :-1.084   Min.   : 0.2819  
+#  1st Qu.: 2772   1st Qu.: 1.1693   1st Qu.:-0.104815   1st Qu.: 1.130   1st Qu.: 2.7028  
+#  Median : 5510   Median : 1.7494   Median : 0.008580   Median : 1.742   Median : 4.2374  
+#  Mean   : 5499   Mean   : 1.8277   Mean   : 0.001208   Mean   : 1.829   Mean   : 5.3003  
+#  3rd Qu.: 8237   3rd Qu.: 2.4885   3rd Qu.: 0.130163   3rd Qu.: 2.553   3rd Qu.: 7.1747  
+#  Max.   :10999   Max.   : 4.2655   Max.   : 1.663093   Max.   : 4.995   Max.   :25.3268  
+```
+
+##### 转换为栅格
+
+```R
+GLM<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "GLM")])
+SK.GLM<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "SK.GLM")])
+RK.GLM.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.GLM.bc")])
+RK.GLM.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.GLM")])
+```
+
+##### 绘制预测 SOC
+
+```R
+glm1<-ggR(GLM, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("GLM Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+glm2<-ggR(SK.GLM, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("SK GLM Residuals (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+glm3<-ggR(RK.GLM.bc, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-GLM Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+glm4<-ggR(RK.GLM.SOC, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-GLM Predicted (mg/g)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+grid.arrange(glm1,glm2,glm3,glm4, ncol = 4)  # Multiplot 
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_2.png)
+
+#### 随机森林
+
+基于决策树的多次迭代组合的随机森林已经成为一种主要的数据分析工具，与单次迭代分类和回归树分析相比表现良好 [Heidema等，2006]。每棵树都是通过引导原始数据集制成的，该原始数据集允许使用剩余的测试集 (所谓的袋外 (Out-Of-Bag，OOB) 样本) 进行稳健的误差估计。从引导样本中预测排除的 OOB 样本，并通过组合所有树的 OOB 预测。RF 算法可以优于线性回归，与线性回归不同，RF 没有考虑目标变量的概率密度函数形式的要求 [Hengl等，2015; Kuhn和Johnson，2013]。RF 的一个主要缺点是难以解释响应和预测变量之间的关系。但是，RF 允许通过置换 OOB 变量之前和之后预测精度的平均下降来估计变量的重要性。然后在所有树上对两者之间的差异进行平均，并通过差异的标准偏差进行归一化 (Ahmed等，2017)。
+
+首先，用一个综合的环境协变量拟合 RF 模型，然后，我们将计算和建模 RF 模型残差的变异函数，然后将简单的克里金法 (SK) 应用于残差，以估计空间预测残差 (区域趋势)。最后，RF 回归预测结果，将添加 SK 克里格残差来估计插值土壤有机碳。
+
+##### 拟合随机森林模型 (RF)
+
+```R
+set.seed(1856)
+mtry <- sqrt(ncol(train.x))  # 每次拆分时随机抽样作为候选变量的数量。
+tunegrid.rf <- expand.grid(.mtry=mtry)
+RF<-train(train.x,
+           RESPONSE,
+           method = "rf",
+           trControl=myControl,
+           tuneGrid=tunegrid.rf,
+           ntree= 100,
+           preProc=c('center', 'scale'))
+print(RF)
+# Random Forest 
+
+# 368 samples
+#  11 predictor
+
+# Pre-processing: centered (11), scaled (11) 
+# Resampling: Cross-Validated (10 fold, repeated 5 times) 
+# Summary of sample sizes: 332, 331, 331, 331, 332, 331, ... 
+# Resampling results:
+
+#   RMSE       Rsquared   MAE      
+#   0.9345237  0.4780398  0.7210278
+
+# Tuning parameter 'mtry' was held constant at a value of 3.316625
+```
+
+##### RF 残差的变异函数建模
+
+首先，我们必须提取 RF 模型的残差，我们将使用 ***resid()*** 函数来获取 RF 模型的残差。
+
+```R
+# Extract residials
+train.xy$residuals.rf<-resid(RF)
+# Variogram
+v.rf<-variogram(residuals.rf~ 1, data = train.xy)
+# Intial parameter set by eye esitmation
+m.rf<-vgm(0.15,"Exp",40000,0.05)
+# least square fit
+m.f.rf<-fit.variogram(v.rf, m.rf)
+m.f.rf
+#   model     psill    range
+# 1   Nug 0.0000000     0.00
+# 2   Exp 0.1934731 15626.27
 ```
 
 ```R
+#### Plot varigram and fitted model:
+plot(v.rf, pl=F, 
+     model=m.f.rf,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Variogram and Fitted Model\n Residuals of RF model",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+```
 
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_3.png)
+
+##### 网格位置的预测
+
+```R
+grid.xy$RF <- predict(RF, grid.df)
+```
+
+网格位置处 RF 残差的简单 Kriging 预测
+
+```R
+SK.RF<-krige(residuals.rf~ 1, 
+              loc=train.xy,        # Data frame
+              newdata=grid.xy,     # Prediction location
+              model = m.f.rf,      # fitted varigram model
+              beta = 0)            # residuals from a trend; expected value is 0 
+# [using simple kriging]
+```
+
+##### 克里金法预测 (SK + 回归)
+
+```R
+grid.xy$SK.RF<-SK.RF$var1.pred
+# Add RF predicted + SK preedicted residuals
+grid.xy$RK.RF.bc<-(grid.xy$RF+grid.xy$SK.RF)
+```
+
+##### 逆变换
+
+对于逆变换，我们使用变换参数：
+
+```R
+k1<-1/0.2523339                                   
+grid.xy$RK.RF <-((grid.xy$RK.RF.bc *0.2523339+1)^k1)
+summary(grid.xy)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min     max
+# x -1245285  114715
+# y  1003795 2533795
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 10674
+# Data attributes:
+#        ID             GLM              SK.GLM            RK.GLM.bc          RK.GLM       
+#  Min.   :    1   Min.   :-0.9197   Min.   :-2.663611   Min.   :-1.084   Min.   : 0.2819  
+#  1st Qu.: 2772   1st Qu.: 1.1693   1st Qu.:-0.104815   1st Qu.: 1.130   1st Qu.: 2.7028  
+#  Median : 5510   Median : 1.7494   Median : 0.008580   Median : 1.742   Median : 4.2374  
+#  Mean   : 5499   Mean   : 1.8277   Mean   : 0.001208   Mean   : 1.829   Mean   : 5.3003  
+#  3rd Qu.: 8237   3rd Qu.: 2.4885   3rd Qu.: 0.130163   3rd Qu.: 2.553   3rd Qu.: 7.1747  
+#  Max.   :10999   Max.   : 4.2655   Max.   : 1.663093   Max.   : 4.995   Max.   :25.3268  
+#        RF              SK.RF               RK.RF.bc           RK.RF        
+#  Min.   :-0.2965   Min.   :-1.0396339   Min.   :-0.8629   Min.   : 0.3779  
+#  1st Qu.: 1.1496   1st Qu.:-0.0487090   1st Qu.: 1.1342   1st Qu.: 2.7114  
+#  Median : 1.8344   Median :-0.0008605   Median : 1.8129   Median : 4.4496  
+#  Mean   : 1.8425   Mean   :-0.0063920   Mean   : 1.8361   Mean   : 5.2190  
+#  3rd Qu.: 2.5434   3rd Qu.: 0.0401477   3rd Qu.: 2.5500   3rd Qu.: 7.1623  
+#  Max.   : 4.6236   Max.   : 1.0526308   Max.   : 5.2743   Max.   :28.6076 
+```
+
+##### 转换为栅格
+
+```R
+RF<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RF")])
+SK.RF<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "SK.RF")])
+RK.RF.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.RF.bc")])
+RK.RF.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.RF")])
+```
+
+##### 绘制预测 SOC
+
+```R
+rf1<-ggR(RF, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RF Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+rf2<-ggR(SK.RF, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("SK RF Residuals (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+rf3<-ggR(RK.RF.bc, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-RF Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+rf4<-ggR(RK.RF.SOC, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-RF Predicted (mg/g)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+grid.arrange(rf1,rf2,rf3,rf4, ncol = 4)  # Multiplot
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_4.png)
+
+#### 元集成机器学习
+
+集成机器学习方法使用多种学习算法来获得比从任何组成学习算法获得的更好的预测性能。许多流行的现代机器学习算法都是集合。例如，随机森林和梯度提升机都是集合学习器。但是，堆叠泛化或堆叠或超级学习 (Wolpert，1992) 引入了元学习器的概念，该概念将多个强大的，不同的机器学习模型集合或组合在一起以获得更好的预测。在这种建模方法中，首先训练每个基本级别模型，然后在基本级别模型的输出上训练元模型。基本级别模型通常由不同的学习算法组成，因此堆叠集合通常是异构的。
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_5.png)
+
+我们将 GLM 和 RF 回归模型(子模型)叠加，建立随机森林 (RF) 回归模型来预测 SOC。
+
+##### 创建模型列表
+
+```R
+algorithmList <- c("glm","rf")
+```
+
+##### 拟合所有模型
+
+我们将使用 **caretEnsemble** 包的 ***caretList()*** 功能来拟合所有模型。
+
+```R
+set.seed(1856)
+models<-caretList(train.x, RESPONSE,
+                  methodList=algorithmList,
+                  trControl=myControl,
+                  preProc=c('center', 'scale'))
+```
+
+##### 子模型的性能
+
+```R
+results.all <- resamples(models)
+cv.models<-as.data.frame(results.all[2])
+summary(results.all)
+# Call:
+# summary.resamples(object = results.all)
+
+# Models: glm, rf 
+# Number of resamples: 50 
+
+# MAE 
+#          Min.   1st Qu.    Median      Mean   3rd Qu.     Max. NA's
+# glm 0.5299362 0.6759200 0.7317607 0.7323044 0.7936931 1.049905    0
+# rf  0.5559114 0.6511738 0.7138410 0.7195130 0.7839459 1.010871    0
+
+# RMSE 
+#          Min.   1st Qu.    Median      Mean  3rd Qu.     Max. NA's
+# glm 0.6654767 0.8742916 0.9524959 0.9435913 1.034049 1.308432    0
+# rf  0.6854099 0.8645415 0.9399393 0.9306508 1.010455 1.261128    0
+
+# Rsquared 
+#          Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+# glm 0.1626709 0.4161093 0.4726874 0.4767778 0.5456160 0.6850497    0
+# rf  0.2138578 0.4080458 0.4848379 0.4868120 0.5505441 0.7026729    0
+```
+
+##### 绘制 K 折交叉验证结果 (MAE，RMSE，R2)
+
+```R
+dotplot(results.all, 
+        scales =list(x = list(relation = "free")),
+        panelRange =T,  conf.level = 0.9, 
+        between = list(x = 2), layout=c(3,1))
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_6.png)
+
+##### 通过叠加来组合几个预测模型
+
+对于随机森林回归模型，我们将使用带有 `method` 和 `rf` 参数的 ***caretStack()*** 函数:
+
+```R
+stackControl <- trainControl(method="repeatedcv", 
+                             number=10, 
+                             repeats=5, 
+                             savePredictions=TRUE)
+set.seed(1856)
+stack.rf <- caretStack(models, 
+                       method="rf",
+                       trControl=stackControl)
+# note: only 1 unique complexity parameters in default grid. Truncating the grid to 1 .
+```
+
+##### 集合结果
+
+```R
+stack.rf.cv<-stack.rf$ens_model$resample
+stack.rf.results<-print(stack.rf)
+# A rf ensemble of 2 base models: glm, rf
+
+# Ensemble results:
+# Random Forest 
+
+# 1840 samples
+#    2 predictor
+
+# No pre-processing
+# Resampling: Cross-Validated (10 fold, repeated 5 times) 
+# Summary of sample sizes: 1656, 1656, 1656, 1656, 1656, 1656, ... 
+# Resampling results:
+
+#   RMSE       Rsquared   MAE      
+#   0.8861827  0.5296594  0.6690021
+
+# Tuning parameter 'mtry' was held constant at a value of 2
+```
+
+##### 残差的变异函数建模
+
+现在，我们将计算 RF 模型的残差，因为 ***resid()*** 函数在这里不起作用。
+
+```R
+train.xy$REG.SOC.bc<-predict(stack.rf,train.x)
+train.xy$residuals.stack<-(train.xy$SOC.bc-train.xy$REG.SOC.bc)
+
+# Variogram
+v.stack<-variogram(residuals.stack~ 1, data = train.xy)
+# Intial parameter set by eye esitmation
+m.stack<-vgm(0.15,"Exp",40000,0.05)
+# least square fit
+m.f.stack<-fit.variogram(v.stack, m.stack)
+m.f.stack
+#   model      psill    range
+# 1   Nug 0.74019315      0.0
+# 2   Exp 0.02392722 196106.8
 ```
 
 ```R
+#### Plot varigram and fitted model:
+plot(v.stack, pl=F, 
+     model=m.f.stack,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Variogram and Fitted Model\n Residuals of meta-Ensemble model",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+```
 
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_7.png)
+
+##### 网格位置的预测
+
+```R
+grid.xy$stack <- predict(stack.rf, grid.df)
+```
+
+网格位置处 RF 残差的简单 Kriging 预测
+
+```R
+SK.stack<-krige(residuals.stack~ 1, 
+              loc=train.xy,        # Data frame
+              newdata=grid.xy,     # Prediction location
+              model = m.f.stack,    # fitted varigram model
+              beta = 0)            # residuals from a trend; expected value is 0  
+# [using simple kriging]
+```
+
+##### 克里金法预测 (SK + 回归)
+
+```R
+grid.xy$SK.stack<-SK.stack$var1.pred
+# Add RF predicted + SK preedicted residuals
+grid.xy$RK.stack.bc<-(grid.xy$stack+grid.xy$SK.stack)
+```
+
+##### 逆变换
+
+```R
+k1<-1/0.2523339                                   
+grid.xy$RK.stack <-((grid.xy$RK.stack.bc *0.2523339+1)^k1)
+summary(grid.xy)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min     max
+# x -1245285  114715
+# y  1003795 2533795
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 10674
+# Data attributes:
+#        ID             GLM              SK.GLM            RK.GLM.bc          RK.GLM       
+#  Min.   :    1   Min.   :-0.9197   Min.   :-2.663611   Min.   :-1.084   Min.   : 0.2819  
+#  1st Qu.: 2772   1st Qu.: 1.1693   1st Qu.:-0.104815   1st Qu.: 1.130   1st Qu.: 2.7028  
+#  Median : 5510   Median : 1.7494   Median : 0.008580   Median : 1.742   Median : 4.2374  
+#  Mean   : 5499   Mean   : 1.8277   Mean   : 0.001208   Mean   : 1.829   Mean   : 5.3003  
+#  3rd Qu.: 8237   3rd Qu.: 2.4885   3rd Qu.: 0.130163   3rd Qu.: 2.553   3rd Qu.: 7.1747  
+#  Max.   :10999   Max.   : 4.2655   Max.   : 1.663093   Max.   : 4.995   Max.   :25.3268  
+#        RF              SK.RF               RK.RF.bc           RK.RF        
+#  Min.   :-0.2965   Min.   :-1.0396339   Min.   :-0.8629   Min.   : 0.3779  
+#  1st Qu.: 1.1496   1st Qu.:-0.0487090   1st Qu.: 1.1342   1st Qu.: 2.7114  
+#  Median : 1.8344   Median :-0.0008605   Median : 1.8129   Median : 4.4496  
+#  Mean   : 1.8425   Mean   :-0.0063920   Mean   : 1.8361   Mean   : 5.2190  
+#  3rd Qu.: 2.5434   3rd Qu.: 0.0401477   3rd Qu.: 2.5500   3rd Qu.: 7.1623  
+#  Max.   : 4.6236   Max.   : 1.0526308   Max.   : 5.2743   Max.   :28.6076  
+#      stack           SK.stack         RK.stack.bc        RK.stack      
+#  Min.   :-1.218   Min.   :-0.21691   Min.   :-1.257   Min.   : 0.2205  
+#  1st Qu.: 1.126   1st Qu.:-0.05766   1st Qu.: 1.117   1st Qu.: 2.6744  
+#  Median : 1.826   Median :-0.02026   Median : 1.804   Median : 4.4215  
+#  Mean   : 1.840   Mean   :-0.01805   Mean   : 1.822   Mean   : 5.3440  
+#  3rd Qu.: 2.578   3rd Qu.: 0.01338   3rd Qu.: 2.552   3rd Qu.: 7.1725  
+#  Max.   : 5.223   Max.   : 0.17909   Max.   : 5.202   Max.   :27.7264  
+```
+
+##### 转换为栅格
+
+```R
+stack<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "stack")])
+SK.stack<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "SK.stack")])
+RK.stack.bc<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.stack.bc")])
+RK.stack.SOC<-rasterFromXYZ(as.data.frame(grid.xy)[, c("x", "y", "RK.stack")])
+```
+
+##### 绘制预测 SOC
+
+```R
+s1<-ggR(stack, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("Meta-Ensemble Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+s2<-ggR(SK.stack, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("SK Meta-Ensemble Residuals (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+s3<-ggR(RK.stack.bc, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-Meta-Ensemble Predicted (BoxCox)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+s4<-ggR(RK.stack.SOC, geom_raster = TRUE) +
+  scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","blue"))+
+  theme_bw()+
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())+
+   ggtitle("RK-Meta-Ensemble Predicted (mg/g)")+
+   theme(plot.title = element_text(hjust = 0.5))
+
+grid.arrange(s1,s2,s3,s4, ncol = 4)  # Multiplot 
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_8.png)
+
+### 指示克里金
+
+指示 kriging (IK) 是一种非参数地统计学方法，它对预先定义的阈值进行指标变换 (0,1) 后的变量进行工作，并映射超过预先定义的阈值的概率。这对于概率决策是直接有用的。它还可以用于估计整个累积概率分布 (CDF)，并且CDF的平均值 (E型估计) 可以用作对分布的上尾和下尾进行建模之后的污染物浓度的估计 (Goovaerts，2009)。基于CDF的IK适用于数据强烈偏斜时，传统的数据转换限制了由于极端值而获得稳健的统计数据和估计量。
+
+在 R 中使用 gstat 包，我们可以实现指示克里格(IK)进行概率映射。但是目前还没有可用的 R 包来通过 IK 的 CDF 的 **E-type-estimate**。您可以使用最流行的地质统计软件 Gslib 和 sems 来完成。**AUTO-IK**(Goovaerts, 2009)，是一种自动的Gslib例程，用于连续数据二进制编码的阈值选择，指标半变差函数的计算和建模，非监控位置(规则或不规则网格)概率分布的建模，以及这些分布的均值和方差的估计。
+
+本工作将使用英国地质调查局提供的孟加拉国地下水砷浓度数据。数据库包含孟加拉国64个区中 61 个区的 3534 个钻孔调查的水化学数据。)． 约 27.7% 和 2.5% 的样品井 As 浓度分别低于氢化物 发生-原子 荧光光谱法 0.5 u/L 和氢化物 发生-ICP-AES 法 6.0 ug/L的仪器检测限。As凝结低于检出限的样品，我们指定的值为设备检出限的一半(0.25或3.0 ug/l)。
+
+土壤有机碳数据(训练和试验数据集)可以在[这里](https://www.dropbox.com/s/d6nnlu2da93mp48/DATA_08.7z?dl=0)找到。
+
+我们将使用两个阈值 -10 ppb (WHO标准) 和 50 ppb (孟加拉国标准) 来创建超出这些阈值的概率图，我们将按照以下步骤进行操作:
+
+- 将数值变量转换为指示器变量
+- 计算并建立指标变异函数模型
+- 通过指示克里格预测超过阈值的概率
+
+```R
+library(plyr)
+library(dplyr)
+library(gstat)
+library(raster)
+library(rasterVis)
+library(ggplot2)
+library(car)
+library(classInt)
+library(RStoolbox)
+library(gridExtra)
+
+# Define data folder
+dataFolder<-"D:\\Env\\DATA_08\\"
+
+df<-read.csv(paste0(dataFolder,"bgs_geochemical.csv"), header= TRUE) 
+grid<-read.csv(paste0(dataFolder,"bd_grid.csv"), header= TRUE) 
+bd<-shapefile(paste0(dataFolder,"BD_Banladesh_BUTM.shp"))
+```
+
+##### 探索性数据分析
+
+```R
+summary(df$As)
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#    0.25    0.25    3.90   55.17   49.98 1660.00 
 ```
 
 ```R
+par(mfrow=c(1,2))
+hist(df$As, breaks=20, xlab = "As (ppb)", main="Histogram of As")
+box()
+qqnorm(df$As, pch = 1,main= "QQ-plot of As") 
+qqline(df$As, col = "steelblue", lwd = 2) 
 
+par(mfrow=c(1,1))
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_1.png)
+
+##### 创建 SPDF
+
+所有采样位置都在地理坐标系统中，因此我们需要在投影坐标系中转换数据 (Albers等面积Conic NAD1983)
+
+```R
+##  define coordinates
+xy <- df[,c(4,5)]
+# Convert to spatial point
+SPDF <- SpatialPointsDataFrame(coords = xy, data=df) 
+# Define projection
+proj4string(SPDF) = CRS("+proj=longlat +ellps=WGS84")  # WGS 84
+# Change projection 
+BUTM<-proj4string(bd)              # extract projection information
+SPDF.PROJ<- spTransform(SPDF,        # Input SPDF
+                          BUTM)       # projection 
 ```
 
 ```R
+# convert to a data-frame
+point.df<-as.data.frame(SPDF.PROJ)
+# Rename (last two column)
+colnames(point.df)[35] <- "x"
+colnames(point.df)[36] <- "y"
+mf<-point.df[,c(35:36,7,15,23)]
+head(mf)
+#          x       y WELL_TYPE  As    Fe
+# 1 509574.3 2474006       DTW 0.5 0.103
+# 2 439962.9 2647931       STW 0.5 0.087
+# 3 662328.1 2718502       STW 0.5  1.37
+# 4 619708.4 2631583       STW 0.5 0.128
+# 5 454332.2 2522667       DTW 0.5 0.019
+# 6 438852.0 2576967       STW 0.5 0.042
+```
 
+##### 指标变换
+
+现在，我们使用以下公式计算阈值400 ppm Pb的指标变量。如果连续变量的值低于定义的阈值，则连续变量的指标为1，否则为0。
+
+```R
+ik.10<-mf$As > 10    # threshold 10 ppb
+ik.50<-mf$As > 50    # threshold 50 ppb
+```
+
+现在，我们用这个指标创建一个df。
+
+```R
+ik.df<-as.data.frame(cbind(mf,ik.10,ik.50))
+head(ik.df)
+#          x       y WELL_TYPE  As    Fe ik.10 ik.50
+# 1 509574.3 2474006       DTW 0.5 0.103 FALSE FALSE
+# 2 439962.9 2647931       STW 0.5 0.087 FALSE FALSE
+# 3 662328.1 2718502       STW 0.5  1.37 FALSE FALSE
+# 4 619708.4 2631583       STW 0.5 0.128 FALSE FALSE
+# 5 454332.2 2522667       DTW 0.5 0.019 FALSE FALSE
+# 6 438852.0 2576967       STW 0.5 0.042 FALSE FALSE
+
+coordinates(ik.df)=~x+y
+coordinates(grid) = ~x+y
+```
+
+##### 地图数据
+
+```R
+spplot(ik.df, zcol = "As", col.regions = c("green", "orange", "red"), cex=.5,
+       main = "Groundwater As  (ppb)")
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_2.png)
+
+```R
+p1<-spplot(ik.df, zcol = "ik.50", col.regions = c("green", "red"), cex=.5,
+       main = "As > 10 ppb")
+p2<-spplot(ik.df, zcol = "ik.50", col.regions = c("green", "red"), cex=.5,
+       main = " As > 50 ppb")
+grid.arrange(p1, p2, ncol=2)
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_3.png)
+
+##### 指示变异函数
+
+```R
+ik.df <- ik.df[-zerodist(ik.df)[,1],] 
+# Variogram
+v10<-variogram(ik.10~ 1, data = ik.df)
+v50<-variogram(ik.50~ 1, data = ik.df)
+# Intial parameter set by eye esitmation
+m10<-vgm(0.15,"Exp",40000,0.05)
+m50<-vgm(0.15,"Exp",40000,0.05)
+# least square fit
+m.f.10<-fit.variogram(v10, m10)
+m.f.50<-fit.variogram(v50, m50)
+m.f.10
+#   model     psill    range
+# 1   Nug 0.1346799     0.00
+# 2   Exp 0.1155823 46860.32
+m.f.50
+#   model     psill    range
+# 1   Nug 0.1005604     0.00
+# 2   Exp 0.1030162 56236.76
+```
+
+##### 绘制变量图和拟合模型
+
+```R
+#### Plot varigram and fitted model:
+v1<-plot(v10, pl=F, 
+     model=m.f.10,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Indicator Variogram\n As > 10 ppb",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+
+v2<-plot(v50, pl=F, 
+     model=m.f.50,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Indicator Variogram\n As > 50 ppb",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+grid.arrange(v1, v2, nrow = 1)
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_4.png)
+
+##### 交叉验证
+
+我们将计算As浓度大于10和5 ppb的IK预测的留一交叉验证 (LOOCV)。它的工作原理与参数克里金法相同: 保持一个点，从其他点预测其真实指标的概率，然后将该概率与指标的实际值进行比较。
+
+```R
+cv.10 <- krige.cv(ik.10 ~ 1, loc = ik.df, model = m.f.10, nfold=5)
+cv.50 <- krige.cv(ik.50 ~ 1, loc = ik.df, model = m.f.50, nfold=5)
+```
+
+##### 将预测概率限制在以下范围内:
+
+```R
+cv.10$var1.pred <- pmin(1, cv.10$var1.pred)
+cv.10$var1.pred <- pmax(0, cv.10$var1.pred)
+
+cv.50$var1.pred <- pmin(1, cv.50$var1.pred)
+cv.50$var1.pred <- pmax(0, cv.50$var1.pred)
+summary(cv.50)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  306178.9  751030.6
+# y 2298326.2 2946787.5
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 3420
+# Data attributes:
+#    var1.pred          var1.var       observed          residual       
+#  Min.   :0.00000   Min.   :0.1081   Mode :logical   Min.   :-0.98272  
+#  1st Qu.:0.02597   1st Qu.:0.1158   FALSE:2558      1st Qu.:-0.16356  
+#  Median :0.14422   Median :0.1174   TRUE :862       Median :-0.02653  
+#  Mean   :0.25246   Mean   :0.1179                   Mean   :-0.00009  
+#  3rd Qu.:0.39524   3rd Qu.:0.1193                   3rd Qu.: 0.01103  
+#  Max.   :1.00000   Max.   :0.1620                   Max.   : 1.00756  
+#      zscore                fold      
+#  Min.   :-2.8676192   Min.   :1.000  
+#  1st Qu.:-0.4769934   1st Qu.:2.000  
+#  Median :-0.0766899   Median :3.000  
+#  Mean   :-0.0001732   Mean   :3.034  
+#  3rd Qu.: 0.0320861   3rd Qu.:4.000  
+#  Max.   : 2.9818489   Max.   :5.000  
 ```
 
 ```R
+summary(cv.10)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  306178.9  751030.6
+# y 2298326.2 2946787.5
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 3420
+# Data attributes:
+#    var1.pred         var1.var       observed          residual         
+#  Min.   :0.0000   Min.   :0.1447   Mode :logical   Min.   :-0.9972481  
+#  1st Qu.:0.1316   1st Qu.:0.1550   FALSE:1978      1st Qu.:-0.2416887  
+#  Median :0.3980   Median :0.1572   TRUE :1442      Median :-0.0203483  
+#  Mean   :0.4217   Mean   :0.1577                   Mean   : 0.0000371  
+#  3rd Qu.:0.6899   3rd Qu.:0.1596                   3rd Qu.: 0.2491982  
+#  Max.   :1.0000   Max.   :0.2119                   Max.   : 1.0037231  
+#      zscore                fold      
+#  Min.   :-2.5405964   Min.   :1.000  
+#  1st Qu.:-0.6123220   1st Qu.:2.000  
+#  Median :-0.0512903   Median :3.000  
+#  Mean   : 0.0001323   Mean   :3.008  
+#  3rd Qu.: 0.6276619   3rd Qu.:4.000  
+#  Max.   : 2.5629406   Max.   :5.000 
+```
 
+现在，我们将制作预测概率的后置图，符号大小与概率成比例，红色的点表示假指标，绿色的点表示真指标
+
+```R
+par(mfrow=c(1,2))
+plot(coordinates(cv.10), asp = 1, pch=21, col = ifelse(cv.10$observed,
+ "red", "green"), cex = 0.2 + 1 * cv.10$var1.pred,
+ xlab = "E (km)", ylab = "N (km)", main = "Probability of TRUE indicator (10 ppb)",
+ sub = "Actual indicator: green/red = FALSE/TRUE")
+ grid()
+
+plot(coordinates(cv.50), asp = 1, pch=21, col = ifelse(cv.50$observed,
+ "red", "green"), cex = 0.4 + 1 * cv.50$var1.pred,
+ xlab = "E (km)", ylab = "N (km)", main = "Probability of TRUE indicator (50 ppb)",
+ sub = "Actual indicator: green/red = FALSE/TRUE")
+ grid()
+
+par(mfrow=c(1,1))
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_5.png)
+
+##### 网格位置的 IK 预测
+
+```R
+ik.grid.10<-krige(ik.10~ 1, nmax=50,
+              loc=ik.df,        # Data frame
+              newdata=grid,     # Prediction location
+              model = m.f.10)   # fitted varigram model
+# [using ordinary kriging]
+ik.grid.50<-krige(ik.50~ 1, nmax=50,
+              loc=ik.df,        # Data frame
+              newdata=grid,     # Prediction location
+              model = m.f.50)   # fitted varigram model 
+# [using ordinary kriging]
 ```
 
 ```R
+summary(ik.grid.50)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  301021.7  751021.7
+# y 2279492.7 2944492.7
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 5339
+# Data attributes:
+#    var1.pred            var1.var     
+#  Min.   :-0.005204   Min.   :0.1084  
+#  1st Qu.: 0.014550   1st Qu.:0.1150  
+#  Median : 0.129556   Median :0.1167  
+#  Mean   : 0.237453   Mean   :0.1197  
+#  3rd Qu.: 0.378431   3rd Qu.:0.1198  
+#  Max.   : 1.000370   Max.   :0.1883
 
+summary(ik.grid.10)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  301021.7  751021.7
+# y 2279492.7 2944492.7
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 5339
+# Data attributes:
+#    var1.pred            var1.var     
+#  Min.   :-0.006402   Min.   :0.1451  
+#  1st Qu.: 0.097765   1st Qu.:0.1541  
+#  Median : 0.368668   Median :0.1564  
+#  Mean   : 0.407622   Mean   :0.1601  
+#  3rd Qu.: 0.684044   3rd Qu.:0.1604  
+#  Max.   : 1.000148   Max.   :0.2436  
+```
+
+##### 将预测概率限制在以下范围内:
+
+```R
+ik.grid.10$var1.pred <- pmin(1, ik.grid.10$var1.pred)
+ik.grid.10$var1.pred <- pmax(0, ik.grid.10$var1.pred)
+
+ik.grid.50$var1.pred <- pmin(1, ik.grid.50$var1.pred)
+ik.grid.50$var1.pred <- pmax(0, ik.grid.50$var1.pred)
+summary(ik.grid.50)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  301021.7  751021.7
+# y 2279492.7 2944492.7
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 5339
+# Data attributes:
+#    var1.pred          var1.var     
+#  Min.   :0.00000   Min.   :0.1084  
+#  1st Qu.:0.01455   1st Qu.:0.1150  
+#  Median :0.12956   Median :0.1167  
+#  Mean   :0.23748   Mean   :0.1197  
+#  3rd Qu.:0.37843   3rd Qu.:0.1198  
+#  Max.   :1.00000   Max.   :0.1883  
+
+summary(ik.grid.10)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#         min       max
+# x  301021.7  751021.7
+# y 2279492.7 2944492.7
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 5339
+# Data attributes:
+#    var1.pred          var1.var     
+#  Min.   :0.00000   Min.   :0.1451  
+#  1st Qu.:0.09777   1st Qu.:0.1541  
+#  Median :0.36867   Median :0.1564  
+#  Mean   :0.40764   Mean   :0.1601  
+#  3rd Qu.:0.68404   3rd Qu.:0.1604  
+#  Max.   :1.00000   Max.   :0.2436  
+```
+
+##### 转换为栅格
+
+```R
+p10<-rasterFromXYZ(as.data.frame(ik.grid.10)[, c("x", "y", "var1.pred")])
+p50<-rasterFromXYZ(as.data.frame(ik.grid.50)[, c("x", "y", "var1.pred")])
+```
+
+##### 绘制概率图
+
+为了绘制地图，我们将使用 **rasterVis** 包的 ***levelplot()*** 函数。
+
+```R
+colr <-  colorRampPalette(c("blue","green",'yellow',"red"), space = "rgb")
+p.strip <- list(cex=1.25)
+ckey <- list(labels=list(cex=1, rot=0), height=1)
+
+ik.plot.10<-levelplot(p10, 
+             margin=FALSE, 
+             auto.key=FALSE,
+             scales=list(y=list(draw=F,cex=.3,rot=90, tck= 0.35,alternating=1,col="grey"),
+             x=list(draw=F, cex=.3,tck= .35)),
+             par.settings=list(axis.line=list(col='grey')), 
+             col.regions=colr, 
+             colorkey=ckey, 
+             par.strip.text=p.strip,
+             main="Probability As > 10 ppb")
+
+ik.plot.50<-levelplot(p50, 
+             margin=FALSE, 
+             auto.key=FALSE,
+             scales=list(y=list(draw=F,cex=.3,rot=90, tck= 0.35,alternating=1,col="grey"),
+             x=list(draw=F, cex=.3,tck= .35)),
+             par.settings=list(axis.line=list(col='grey')), 
+             col.regions=colr, 
+             colorkey=ckey, 
+             par.strip.text=p.strip,
+             main="Probability As > 50 ppb")
+
+grid.arrange(ik.plot.10, ik.plot.50, nrow = 1)
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_6.png)
+
+# 空间预测质量评估
+
+空间插值或预测模型的准确性至关重要，因为它决定了插值值的质量。与空间预测的准确性评估相比，开发空间预测模型要容易得多，但是通常情况下，空间预测模型仍然未知。
+
+空间预测质量的评价措施是: 具有 kriging 方差的残差的`平均误差 (ME)`，`平均绝对误差 (MAE)`，`均方根误差 (RMSE)` 和 `均方偏差比 (MSDR)` ，可以计算为:
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_1.png)
+
+在本练习中，我们将使用以下三种方法评估普通克里金法预测的质量:
+
+- 交叉验证
+- 使用独立数据集进行验证
+- 空间不确定性的条件模拟
+
+### 交叉验证
+
+交叉验证是一种重新抽样的过程，用于在有限的数据样本上评估模型。它优于残差评价。两种主要的交叉验证技术通常用于模型评估: 1) K-fold 交叉验证（K-fold cross validation）； 2)留一交叉验证（Leave-one-out cross validation）。
+
+在 K 折交叉验证中，将数据集随机分为测试集和训练集 k 个不同的时间，并重复进行模型进化 k 次。每次，将 `k` 个子集中的一个作为测试集，将其他 `k-1` 子集放在一起形成训练集。然后计算所有 k 个试验的平均误差。该方法的一种变体是将数据随机分为 k 个不同时间的测试和训练集。
+
+在留一交叉验证中，K 等于 N，集合中的数据点的数量。对除一个点以外的所有数据训练模型，并对该点进行预测。最终，使用所有其他观测值分别在每个观测点进行模型预测，并计算平均误差并将其用于评估模型。
+
+```R
+library(plyr)
+library(dplyr)
+library(gstat)
+library(raster)
+library(ggplot2)
+library(car)
+library(classInt)
+library(RStoolbox)
+library(spatstat)
+library(dismo)
+library(fields)
+library(gridExtra)
+
+# Define data folder
+dataFolder<-"D:\\Env\\DATA_08\\"
+train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE) 
+```
+
+##### 数据变换
+
+幂变换使用 Box和Cox (1964) 的最大似然方法来选择针对正态性的单变量或多变量响应的变换。首先，我们必须使用 car 包的 ***powerTransform()*** 函数计算适当的转换参数，然后使用此参数使用 ***bcPower()*** 函数对数据进行转换。
+
+```R
+powerTransform(train$SOC)
+# Estimated transformation parameter 
+# train$SOC 
+# 0.2523339 
+train$SOC.bc<-bcPower(train$SOC, 0.2523339)
+
+coordinates(train) = ~x+y
+```
+
+##### 变异函数建模
+
+```R
+# Variogram
+v<-variogram(SOC.bc~ 1, data = train, cloud=F)
+# Intial parameter set by eye esitmation
+m<-vgm(1.5,"Exp",40000,0.5)
+# least square fit
+m.f<-fit.variogram(v, m)
+m.f
+#   model     psill    range
+# 1   Nug 0.5165678     0.00
+# 2   Exp 1.0816886 82374.23
+```
+
+#### K-fold 交叉验证
+
+我们将使用 k-fold 交叉验证对模型进行评估。我们将使用 ***krige.cv()*** 函数。
+
+```R
+cv<-krige.cv(SOC.bc ~ 1,
+         train,              # data
+         model = m.f,        # fitted varigram model 
+         nfold=10)           # five-fold cross validation
+summary(cv)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min        max
+# x -1246454   83927.82
+# y  1019863 2526240.55
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 368
+# Data attributes:
+#    var1.pred         var1.var         observed         residual        
+#  Min.   :0.1761   Min.   :0.8063   Min.   :-1.499   Min.   :-3.188626  
+#  1st Qu.:1.4505   1st Qu.:0.9752   1st Qu.: 1.149   1st Qu.:-0.721998  
+#  Median :2.0100   Median :1.0540   Median : 1.974   Median :-0.056187  
+#  Mean   :1.9901   Mean   :1.0600   Mean   : 1.981   Mean   :-0.008895  
+#  3rd Qu.:2.5575   3rd Qu.:1.1274   3rd Qu.: 2.919   3rd Qu.: 0.713665  
+#  Max.   :3.9450   Max.   :1.4779   Max.   : 5.423   Max.   : 2.936493  
+#      zscore               fold       
+#  Min.   :-3.286167   Min.   : 1.000  
+#  1st Qu.:-0.687623   1st Qu.: 3.000  
+#  Median :-0.055530   Median : 6.000  
+#  Mean   :-0.007057   Mean   : 5.639  
+#  3rd Qu.: 0.693822   3rd Qu.: 8.000  
+#  Max.   : 2.994699   Max.   :10.000  
+```
+
+##### 残差图
+
+```R
+bubble(cv, zcol = "residual", maxsize = 2.0,  main = "K-fold Cross-validation residuals")
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_2.png)
+
+```R
+# Mean Error (ME)
+ME<-round(mean(cv$residual),3)
+# Mean Absolute Error
+MAE<-round(mean(abs(cv$residual)),3)
+# Root Mean Squre Error (RMSE)
+RMSE<-round(sqrt(mean(cv$residual^2)),3)
+# Mean Squared Deviation Ratio (MSDR)
+MSDR<-mean(cv$residual^2/cv$var1.var)
+
+ME
+# [1] -0.009
+MAE
+# [1] 0.826
+RMSE
+# [1] 1.04
+MSDR
+# [1] 1.03143
+```
+
+#### 实际值 vs 预测值: 线性回归
+
+比较实际值与预测值的另一种方法是在它们之间进行线性回归。理想情况下，这将是一条1:1 的线: 截距为 0 (无偏差)，斜率设置为 1 (增益相等)。
+
+```R
+lm.cv <- lm(cv$var1.pred ~ cv$observed)
+summary(lm.cv)
+# Call:
+# lm(formula = cv$var1.pred ~ cv$observed)
+
+# Residuals:
+#      Min       1Q   Median       3Q      Max 
+# -1.70179 -0.40920 -0.03429  0.44986  2.20694 
+
+# Coefficients:
+#             Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)   1.2902     0.0602   21.43   <2e-16 ***
+# cv$observed   0.3533     0.0255   13.85   <2e-16 ***
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# Residual standard error: 0.6279 on 366 degrees of freedom
+# Multiple R-squared:  0.3439,	Adjusted R-squared:  0.3422 
+# F-statistic: 191.9 on 1 and 366 DF,  p-value: < 2.2e-16
+```
+
+##### 1:1 绘图
+
+```R
+par(mfrow=c(1,1))
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_3.png)
+
+#### 留一交叉验证
+
+```R
+cv.LOOCV<-krige.cv(SOC.bc ~ 1,
+         train,           # data
+         model = m.f)    # fitted varigram model 
+summary(cv.LOOCV)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min        max
+# x -1246454   83927.82
+# y  1019863 2526240.55
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 368
+# Data attributes:
+#    var1.pred         var1.var         observed         residual        
+#  Min.   :0.1107   Min.   :0.8041   Min.   :-1.499   Min.   :-3.188887  
+#  1st Qu.:1.4400   1st Qu.:0.9591   1st Qu.: 1.149   1st Qu.:-0.708533  
+#  Median :1.9942   Median :1.0281   Median : 1.974   Median :-0.008027  
+#  Mean   :1.9824   Mean   :1.0382   Mean   : 1.981   Mean   :-0.001238  
+#  3rd Qu.:2.5319   3rd Qu.:1.1016   3rd Qu.: 2.919   3rd Qu.: 0.723783  
+#  Max.   :3.9177   Max.   :1.4022   Max.   : 5.423   Max.   : 2.934362  
+#      zscore               fold       
+#  Min.   :-3.286447   Min.   :  1.00  
+#  1st Qu.:-0.698335   1st Qu.: 92.75  
+#  Median :-0.008109   Median :184.50  
+#  Mean   :-0.000655   Mean   :184.50  
+#  3rd Qu.: 0.721153   3rd Qu.:276.25  
+#  Max.   : 2.992528   Max.   :368.00 
 ```
 
 ```R
+# Mean Error (ME)
+ME.LOOCV<-round(mean(cv.LOOCV$residual),3)
+# Mean Absolute Error
+MAE.LOOCV<-round(mean(abs(cv.LOOCV$residual)),3)
+# Root Mean Squre Error (RMSE)
+RMSE.LOOCV<-round(sqrt(mean(cv.LOOCV$residual^2)),3)
+# Mean Squared Deviation Ratio (MSDR)
+MSDR.LOOCV<-mean(cv.LOOCV$residual^2/cv$var1.var)
 
+ME.LOOCV
+# [1] -0.001
+MAE.LOOCV
+# [1] 0.832
+RMSE.LOOCV
+# [1] 1.042
+MSDR.LOOCV
+# [1] 1.033859
+```
+
+### 使用独立数据集进行验证
+
+本节我们使用 89 个测试位置的 SOC 数据来验证来自 386 训练数据的普通 kriging 预测。由于我们不会使用测试数据集的 89 点来拟合模型或预测，因此这些都是对模型的独立测试。我们可以将预测值与实际值进行比较。
+
+```R
+library(plyr)
+library(dplyr)
+library(gstat)
+library(raster)
+library(ggplot2)
+library(car)
+library(classInt)
+library(RStoolbox)
+library(spatstat)
+library(dismo)
+library(fields)
+library(gridExtra)
+
+# Define data folder
+dataFolder<-"D:\\Env\\DATA_08\\"
+train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE) 
+test<-read.csv(paste0(dataFolder,"test_data.csv"), header= TRUE) 
+```
+
+##### 数据变换-幂变换
+
+```R
+powerTransform(train$SOC)
+# Estimated transformation parameter 
+# train$SOC 
+# 0.2523339 
+
+powerTransform(test$SOC)
+# Estimated transformation parameter 
+#  test$SOC 
+# 0.3379903
+
+train$SOC.bc<-bcPower(train$SOC, 0.2523339)
+test$SOC.bc<-bcPower(test$SOC, 0.3379903)
 ```
 
 ```R
+coordinates(train) = ~x+y
+coordinates(test) = ~x+y
+```
 
+##### 变异函数建模
+
+```R
+# Variogram
+v<-variogram(SOC.bc~ 1, data = train, cloud=F)
+# Intial parameter set by eye esitmation
+m<-vgm(1.5,"Exp",40000,0.5)
+# least square fit
+m.f<-fit.variogram(v, m)
+m.f
+#   model     psill    range
+# 1   Nug 0.5165678     0.00
+# 2   Exp 1.0816886 82374.23
+```
+
+#### 测试点的预测
+
+我们将使用 k-fold 交叉验证对模型进行评估。我们将使用 ***krige.cv()*** 函数。
+
+```R
+val<-krige(SOC.bc ~ 1,
+         train,        
+         test,
+         model = m.f)
+# [using ordinary kriging]
+
+summary(val)
+# Object of class SpatialPointsDataFrame
+# Coordinates:
+#        min        max
+# x -1185457   95251.19
+# y  1102846 2514145.42
+# Is projected: NA 
+# proj4string : [NA]
+# Number of points: 101
+# Data attributes:
+#    var1.pred         var1.var     
+#  Min.   :0.1426   Min.   :0.7888  
+#  1st Qu.:1.3910   1st Qu.:0.9471  
+#  Median :1.8303   Median :1.0099  
+#  Mean   :1.9214   Mean   :1.0212  
+#  3rd Qu.:2.4667   3rd Qu.:1.0756  
+#  Max.   :3.8089   Max.   :1.3132 
+```
+
+##### 计算残差
+
+```R
+test$SOC.pred<-val$var1.pred
+test$SOC.var<-val$var1.var
+test$residual<-(test$SOC.bc-test$SOC.pred)
+```
+
+##### 残差图
+
+```R
+bubble(test, zcol = "residual", maxsize = 2.0,  main = "Residuals at Test Data")
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_4.png)
+
+#### 误差
+
+```R
+# Mean Error (ME)
+ME<-round(mean(test$residual),3)
+# Mean Absolute Error
+MAE<-round(mean(abs(test$residual)),3)
+# Root Mean Squre Error (RMSE)
+RMSE<-round(sqrt(mean(test$residual^2)),3)
+# Mean Squared Deviation Ratio (MSDR)
+MSDR<-mean(test$residual^2/test$SOC.var)
+
+ME
+# [1] 0.152
+MAE
+# [1] 0.873
+RMSE
+# [1] 1.126
+MSDR
+# [1] 1.267439
+```
+
+#### 实际值 vs 预测值: 线性回归
+
+比较实际值与预测值的另一种方法是在它们之间进行线性回归。理想情况下，这将是一条1:1 的线: 截距为0 (无偏差)，斜率设置为1 (增益相等)。
+
+```R
+lm.val <- lm(test$SOC.pred ~ test$SOC.bc)
+summary(lm.val)
+# Call:
+# lm(formula = test$SOC.pred ~ test$SOC.bc)
+
+# Residuals:
+#      Min       1Q   Median       3Q      Max 
+# -1.16895 -0.42721  0.07515  0.28345  1.30121 
+
+# Coefficients:
+#             Estimate Std. Error t value Pr(>|t|)    
+# (Intercept)  1.19921    0.09196  13.041  < 2e-16 ***
+# test$SOC.bc  0.34824    0.03592   9.695 5.07e-16 ***
+# ---
+# Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# Residual standard error: 0.5419 on 99 degrees of freedom
+# Multiple R-squared:  0.487,	Adjusted R-squared:  0.4818 
+# F-statistic: 93.99 on 1 and 99 DF,  p-value: 5.069e-16
+```
+
+##### 1:1 图
+
+```R
+plot(test$SOC.bc, test$SOC.pred,main=list("Validation at Test Locations",cex=1),
+   sub = "1:1 line red, regression green",
+   xlab = "Observed Box-COX SOC",
+   ylab = "Predicted Box-COX SOC", 
+   cex.axis=.6,
+   xlim = c(-2,6), 
+   ylim =c(-2,6), 
+   pch = 21, 
+   cex=1)
+abline(0, 1, col="red")
+abline(lm.val, col = "green")
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_5.png)
+
+### 空间不确定性的条件模拟
+
+该 kriging 预测图平滑了所研究属性的空间分布的局部细节，小值被高估，而大值被低估，尤其是在低采样密度的区域 (Isaaks和Srivastava 1989)。与kriging不同，条件顺序高斯模拟 (CSGS) 技术可以更好地反映现实，并消除不切实际的平滑，除了尊重原始数据值外，还着重于全局统计数据或半变异函数模型的再现 (Goovaerts 1997)。使用 csg 生成的一组替代实现提供了有关空间预测的一定程度的不确定性，该不确定性通常用于绘制所研究变量的可靠概率图 (Goovaerts 1997)。因此，csg越来越优选用于表征决策和风险分析的不确定性的 kriging，而不是像使用 kriging (Deutsch和Journel 1998) 那样产生未采样位置的最佳无偏预测。
+
+```R
+library(plyr)
+library(dplyr)
+library(gstat)
+library(raster)
+library(rasterVis)
+library(ggplot2)
+library(car)
+library(sp)
+library(classInt)
+library(RStoolbox)
+library(gridExtra)
+
+dataFolder<-"D:\\Env\\DATA_08\\"
+state<-shapefile(paste0(dataFolder,"GP_STATE.shp"))
+train<-read.csv(paste0(dataFolder,"train_data.csv"), header= TRUE) 
+grid<-read.csv(paste0(dataFolder, "GP_prediction_grid_data.csv"), header= TRUE)
+grid.xy<-grid[,1:3]
+```
+
+##### 数据变换-幂变换
+
+```R
+powerTransform(train$SOC)
+train$SOC.bc<-bcPower(train$SOC, 0.2523339)
+coordinates(train) = ~x+y
+coordinates(grid) = ~x+y
+```
+
+##### 变异函数建模
+
+```R
+# Variogram
+v<-variogram(SOC.bc~ 1, data = train, cloud=F)
+# Intial parameter set by eye esitmation
+m<-vgm(1.5,"Exp",40000,0.5)
+# least square fit
+m.f<-fit.variogram(v, m)
+m.f
+#   model     psill    range
+# 1   Nug 0.5165678     0.00
+# 2   Exp 1.0816886 82374.23
+```
+
+##### 绘制变量图和拟合模型
+
+```R
+#### Plot varigram and fitted model:
+plot(v, pl=F, 
+     model=m.f,
+     col="black", 
+     cex=0.9, 
+     lwd=0.5,
+     lty=1,
+     pch=19,
+     main="Variogram and Fitted Model\n Box-Cox Transformed SOC",
+     xlab="Distance (m)",
+     ylab="Semivariance")
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_6.png)
+
+#### 普通克里金
+
+```R
+ok.soc<-krige(SOC.bc~1, 
+              train, 
+              grid,
+              model=m.f, 
+              nmax=50
+              )
+
+# back transformation
+k1<-1/0.2523339                                   
+grid.xy$OK <-((ok.soc$var1.pred *0.2523339+1)^k1)
+```
+
+#### 条件高斯模拟
+
+krige() 方法也可以做条件模拟。它需要一个可选的参数: `nsim` ，条件模拟的数量
+
+```R
+set.seed(130)
+nsim=100
+sim.soc<-krige(SOC.bc~1, 
+              train, 
+              grid,
+              model=m.f, 
+              nmax=50, 
+              nsim = nsim)
+# drawing 100 GLS realisations of beta...
+# [using conditional Gaussian simulation]
+```
+
+#### 所有实现的半真实图
+
+模拟应该尊重空间结构-与变异函数模型相同的结构。现在将产生 100 实现的变量，并绘制box-cox变换 SOC 的变量。
+
+```R
+plot(v$gamma ~ v$dist, xlim = c(0, max(v$dist) * 1.05),
+ylim=c(0,2),
+pch = 19, col = "black",cex=.5,
+cex.axis = 0.8, cex.lab=1, xlab = list("Distance (m)",cex=1), ylab =list("Semivariance",cex=1),
+main=list("Semi-variogram of 100 Realizations",cex=1))
+for(i in 1:100) {
+   sg.v=paste("sim",i,sep="")
+   fg.v = as.formula(paste(sg.v, "~1"))
+   vg.v = variogram(fg.v, sim.soc)
+   lines(variogramLine(fit.variogram(vg.v, m.f),
+   maxdist = max(v$dist)),lty=3, col = "grey")
+}
+points(v$gamma ~ v$dist,pch = 19, col = "red",cex=2)
+lines(variogramLine(fit.variogram(v,  m.f), 
+maxdist = max(v$dist)), col = "red",  lwd=2.0)
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_7.png)
+
+##### 逆变换
+
+```R
+for(i in 1:length(sim.soc@data)){sim.soc@data[[i]] <- (((sim.soc[[i]]*0.2523339+1)^k1))}
+sim.data<-as.data.frame(sim.soc)
+```
+
+#### 空间不确定性的可视化
+
+该组实现提供了有关砷浓度空间分布的不确定性的度量。实现之间的差异描述了不确定性。这种不确定性可以通过所有实现的动画显示来可视化，这允许区分在所有实现 (低不确定性) 上保持稳定的区域与在实现之间发生大波动的区域 (高不确定性)。
+
+##### 数据准备
+
+```R
+soc=sim.data[,3:102]
+soc.stack=stack(soc)
+# round(quantile(soc.stack$values, probs=seq(0,1, by=.1)),1)
+at.soc=classIntervals(soc.stack$values, n = 10, style = "quantile")$brks
+rgb.palette <- colorRampPalette(c("red" ,"yellow","green","blue"),space = "rgb")
+bound <- list("sp.lines", as(state, "SpatialLines"), col="grey40", lwd=.8,lty=1)
+coordinates(sim.data) <- ~x+y
+gridded(sim.data) <- TRUE
+```
+
+要在 R 中创建动画地图，您必须在 R 中安装 **animation** 包。这个包依赖于 ImageMagick 软件。
+
+```R
+Sys.setenv(PATH = paste("C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI", Sys.getenv("PATH"), sep = ";"))
+# ani.options(convert="C:\\Program Files\\ImageMagick-7.0.6-0-Q16\\covert.exe")
+magickPath<-shortPathName("C:\\Program Files\\ImageMagick-7.1.0-Q16-HDRI\\magick.exe")
+ani.options(convert=magickPath)
+```
+
+##### 动画地图
+
+```R
+saveGIF(
+for (i in 1:100){
+print(spplot(sim.data[,i], main = list(label=paste("Realization",i),cex=1.5),
+sp.layout=list(bound),
+   par.settings=list(axis.line=list(col="grey25",lwd=0.5)),at=at.soc,
+   colorkey=list(space="right",width=1.4,at=1:11,labels=list(cex=1.2,at=1:11,
+   labels=c("",   "< 1.2",   "",   " 2.9", "",  " 4.7",  "",  " 7.2", "",  "> 12.5",  ""))),
+   col.regions=rgb.palette(20)))}, 
+height = 600, width = 600, interval = .5, outdir = getwd())
+```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/animation.gif)
+
+#### 局部不确定性的度量
+
+现在，我们将通过比较 E-tpye (平均值)，预期 10% 概率的条件 qauntiles图，50% (中位数) 和 90% 来测量局部不确定性。
+
+```R
+# E-type estimate
+df<-as.data.frame(sim.data)
+df<-df[,1:100]
+grid.xy$mean<-as.data.frame(rowMeans(df[sapply(df, is.numeric)]))
+# names(grid.xy)[5]<-"Etype"
+## Conditional Quantiles
+grid.xy$q10<-apply(as.data.frame(sim.data)[3:102],1,stats::quantile,probs = 0.1,na.rm=TRUE) 
+grid.xy$Median<-apply(as.data.frame(sim.data)[3:102],1,stats::quantile,probs = 0.5,na.rm=TRUE)
+grid.xy$q90<-apply(as.data.frame(sim.data)[3:102],1,stats::quantile,probs = 0.9,na.rm=TRUE)
 ```
 
 ```R
+coordinates(grid.xy) <- ~x+y
+gridded(grid.xy) <- TRUE
 
+col <- colorRampPalette(c("red" ,"yellow","green","blue","sky blue"),space = "rgb")
+spplot(grid.xy, c(4:5), sp.layout=list(bound), col.regions=col(20),
+       names.attr = c("Ordinary Kriging", "E-type Estimates"))
 ```
+
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_8.png)
+
+100 实现的普通预测和 E 型估计并不相同，尽管两者都是最小二乘标准的最佳估计。
+
+##### 条件分位数图
 
 ```R
-
+spplot(grid.xy, c("q10","Median","q90"), sp.layout=list(bound), col.regions=col(20),
+       names.attr = c("0.1-quantile", "Median","0.9 Quantile"), layout=c(3,1))
 ```
 
-```R
+![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_9.png)
 
-```
-
-```R
-
-```
-
-```R
-
-```
-
-```R
-
-```
-
-```R
-
-```
-
+0.1 分位数图的高土壤碳 (黄色部分) 表示未知 SOC 浓度肯定较大的区域，而 0.9 图的低值部分 (深黄色) SOC 浓度肯定较小。
 
 
