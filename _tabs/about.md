@@ -13,6 +13,6 @@ PhD Student - Northwest A&F University
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;[Click for More Information](http://resume.renkaigis.cn)
 
-<i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;[Download CV](http://resume.renkaigis.cn/assets/KaiRen_CV_2023.pdf)
+<i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;[Download CV](http://resume.renkaigis.cn/assets/KaiRen_CV.pdf)
 
 ![](../assets/mine/about.jpg)
