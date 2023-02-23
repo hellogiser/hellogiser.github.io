@@ -5,13 +5,6 @@ categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
 
-> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
->
-> 全部机翻，如有错误，以你的感觉为准。
-
-----
-
-
 空间插值或预测模型的准确性至关重要，因为它决定了插值值的质量。与空间预测的准确性评估相比，开发空间预测模型要容易得多，但是通常情况下，空间预测模型仍然未知。
 
 空间预测质量的评价措施是: 具有 kriging 方差的残差的`平均误差 (ME)`，`平均绝对误差 (MAE)`，`均方根误差 (RMSE)` 和 `均方偏差比 (MSDR)` ，可以计算为:
@@ -23,6 +16,14 @@ tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 - 交叉验证
 - 使用独立数据集进行验证
 - 空间不确定性的条件模拟
+
+----
+
+> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
+>
+> 全部机翻，如有错误，以你的感觉为准。
+
+----
 
 ## 交叉验证
 

@@ -5,11 +5,7 @@ categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
 
-> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
->
-> 全部机翻，如有错误，以你的感觉为准。
 
-----
 
 作为风险评估的一个组成部分，用于预测未采样位置的值的空间插值技术已被广泛用于绘制环境变量，以识别针对管理干预措施的地理区域。空间插值方法可以分为两大类:
 
@@ -17,6 +13,14 @@ tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 
 - 确定性或非地统计学方法
 - 随机或地统计学方法
+
+----
+
+> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
+>
+> 全部机翻，如有错误，以你的感觉为准。
+
+----
 
 **空间插值的确定性方法**
 

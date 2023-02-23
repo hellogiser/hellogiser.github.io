@@ -5,12 +5,6 @@ categories: [R, 空间插值]
 tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 ---
 
-> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
->
-> 全部机翻，如有错误，以你的感觉为准。
-
-----
-
 
 使用地统计学技术进行空间插值已广泛用于绘制环境变量。地统计学依赖于随机函数的概念，其中未知值的集合被视为一组空间依赖的随机变量。随机函数概念允许考虑属性空间变化中的结构。与确定性插值方法不同，地统计学假定域中的所有值都是具有依赖性的随机过程的结果。在任何特定位置，属性值的不确定性是根据该位置的随机变量的一组可能结果来估计的。这样，我们就可以对整个研究区域的空间预测的不确定性进行建模。
 
@@ -29,6 +23,14 @@ tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 - 土壤变量的数字制图
 - 气象应用中温度、降雨量和相关变量 (如酸雨) 的预测
 - 在公共卫生领域
+
+----
+
+> 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
+>
+> 全部机翻，如有错误，以你的感觉为准。
+
+----
 
 ## 半变异函数建模
 
