@@ -17,13 +17,10 @@ tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 - 使用独立数据集进行验证
 - 空间不确定性的条件模拟
 
-----
-
 > 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
->
+{: .prompt-info }
 > 全部机翻，如有错误，以你的感觉为准。
-
-----
+{: .prompt-tip}
 
 ## 交叉验证
 

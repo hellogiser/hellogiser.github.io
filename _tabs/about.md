@@ -9,7 +9,7 @@ order: 4
 
 ### Kai Ren
 
-PhD Student - Northwest A&F University
+PhD Student - Northwest A&F University - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;[Click for More Information](http://resume.renkaigis.cn)
 

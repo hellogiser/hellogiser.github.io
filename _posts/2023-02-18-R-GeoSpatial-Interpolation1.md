@@ -14,13 +14,12 @@ tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
 - 确定性或非地统计学方法
 - 随机或地统计学方法
 
-----
 
 > 原文链接：[Geospatial Data Science with R](https://zia207.github.io/geospatial-r-github.io)
->
+{: .prompt-info }
 > 全部机翻，如有错误，以你的感觉为准。
+{: .prompt-tip}
 
-----
 
 **空间插值的确定性方法**
 
@@ -80,7 +79,7 @@ gridded(grid) <- TRUE
 
 拟合一阶多项式模型:
 
-SOC =intercept + aX+ bY (X = x coordinates, Y= y- coordinates)
+SOC =intercept + aX+ bY (X = x coordinates, Y= y coordinates)
 
 我们将在没有指定地理坐标的情况下使用 **gstat** 包的 ***krige()*** 函数。它将执行普通或加权最小二乘预测
 
