@@ -6,8 +6,13 @@ order: 4
 
 <!-- > Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
 {: .prompt-tip } -->
+<style>
+.row:only-child>#core-wrapper {
+    padding-bottom: 0rem;
+}
+</style>
 
-### Kai Ren
+## **Kai Ren**
 
 <b>Visting PhD Student</b> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E"><b>Curtin University</b></a> - [kai.ren@curtin.edu.au](mailto:kai.ren@curtin.edu.au)
 
@@ -17,4 +22,5 @@ order: 4
 
 <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;[Download CV](http://resume.renkaigis.cn/assets/KaiRen_CV.pdf)
 
-![](../assets/mine/about.jpg)
+<!-- ![](../assets/mine/about.jpg) -->
+<img src="../assets/mine/about.jpg" width="90%"/>
