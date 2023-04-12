@@ -1,8 +1,8 @@
 ---
 title: 空间插值预测质量评估【R】
 date: 2023-02-23 12:34:12 +0800
-categories: [R, 空间插值]
-tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
+categories: [R, Spatial Interpolate]
+tags: [Spatial Interpolate, R, Spatial Analysis]     # TAG names should always be lowercase
 ---
 
 空间插值或预测模型的准确性至关重要，因为它决定了插值值的质量。与空间预测的准确性评估相比，开发空间预测模型要容易得多，但是通常情况下，空间预测模型仍然未知。

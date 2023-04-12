@@ -1,8 +1,8 @@
 ---
 title: 地统计学空间插值【R】
 date: 2023-02-20 12:34:12 +0800
-categories: [R, 空间插值]
-tags: [空间插值, R, 空间分析]     # TAG names should always be lowercase
+categories: [R, Spatial Interpolate]
+tags: [Spatial Interpolate, R, Spatial Analysis]     # TAG names should always be lowercase
 ---
 
 
