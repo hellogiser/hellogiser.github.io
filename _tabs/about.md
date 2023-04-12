@@ -9,7 +9,9 @@ order: 4
 
 ### Kai Ren
 
-PhD Student - Northwest A&F University - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
+<b>Visting PhD Student</b> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E"><b>Curtin University</b></a> - [kai.ren@curtin.edu.au](mailto:kai.ren@curtin.edu.au)
+
+<b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green"><b>Northwest A&F University</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;[Click for More Information](http://resume.renkaigis.cn)
 
