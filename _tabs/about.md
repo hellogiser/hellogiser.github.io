@@ -17,7 +17,7 @@ order: 4
 
 <a href="https://staffportal.curtin.edu.au/staff/profile/view/kai-ren-500cf978/" target="_blank"><b>Visiting Research Associate</b></a> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E" target="_blank"><b>Curtin University</b></a> - [kai.ren@curtin.edu.au](mailto:kai.ren@curtin.edu.au)
 
-<b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank"><b>Northwest A&F University</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
+<b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="http://resume.renkaigis.cn"  target="_blank">Click for More Information</a>
 
