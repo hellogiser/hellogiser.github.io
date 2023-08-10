@@ -1,11 +1,38 @@
 ---
-title: 《能断金刚般若波罗蜜经》
+title: 《能断金刚般若波罗蜜经》 - 姚秦鸠摩罗什译
 date: 2023-08-01 08:08:08 +0800
 categories: [金刚经]
 tags: [金刚经]     # TAG names should always be lowercase
 ---
 
+I am happy to join with you today in what will go down in history as the greatest demonstration for freedom in the history of our nation.
+<!-- more -->
 
+> 罗林《如是我闻》唱诵版 - Made by Kai
+
+1. [【刀郎】罗林《如是我闻》唱诵版，金刚经第1-2品](https://www.bilibili.com/video/BV1MX4y1j75p){:target="_blank"}
+
+2. [【刀郎】罗林《如是我闻》唱诵版，金刚经第3-7品](https://www.bilibili.com/video/BV1RX4y1L7KD){:target="_blank"}
+
+3. [【刀郎】罗林《如是我闻》唱诵版，金刚经第8-9品](https://www.bilibili.com/video/BV1Mz4y1W7xb){:target="_blank"}
+
+4. [【刀郎】罗林《如是我闻》唱诵版，金刚经第10-13品](https://www.bilibili.com/video/BV1gp4y1G7Vg){:target="_blank"}
+
+5. [](){:target="_blank"}
+
+6. [](){:target="_blank"}
+
+7. [](){:target="_blank"}
+
+8. [](){:target="_blank"}
+
+9. [](){:target="_blank"}
+
+10. [](){:target="_blank"}
+
+11. [](){:target="_blank"}
+
+12. [](){:target="_blank"}
 
 ## 金刚经 第一品 法会因由分
 
