@@ -11,7 +11,7 @@ tags: [金刚经]     # TAG names should always be lowercase
 
 本经的主旨为 **“诸菩萨摩诃萨应如是生清净心：不应住色生心，不应住声、香、味、触、法生心，应无所住而生其心”**。
 
-> 罗林《如是我闻》唱诵版 - Made by Kai
+> **罗林《如是我闻》唱诵版 - Made by Kai**
 
 1. [【刀郎】罗林《如是我闻》唱诵版，金刚经第1-2品](https://www.bilibili.com/video/BV1MX4y1j75p){:target="_blank"}
 
@@ -21,9 +21,9 @@ tags: [金刚经]     # TAG names should always be lowercase
 
 4. [【刀郎】罗林《如是我闻》唱诵版，金刚经第10-13品](https://www.bilibili.com/video/BV1gp4y1G7Vg){:target="_blank"}
 
-5. [](){:target="_blank"}
+5. [【刀郎】罗林《如是我闻》唱诵版，金刚经第14品](https://www.bilibili.com/video/BV1Uu411n7pb){:target="_blank"}
 
-6. [](){:target="_blank"}
+6. [【刀郎】罗林《如是我闻》唱诵版，金刚经第15-16品](https://www.bilibili.com/video/BV11u4y1i7VX){:target="_blank"}
 
 7. [](){:target="_blank"}
 
