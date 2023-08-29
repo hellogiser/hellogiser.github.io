@@ -37,8 +37,7 @@ tags: [金刚经]     # TAG names should always be lowercase
 
 1.  [【刀郎】罗林《如是我闻》唱诵版，金刚经第30-32品](https://www.bilibili.com/video/BV1q84y1o7JM){:target="_blank"}
 
-- **[【金刚经完整版】刀郎-罗林《如是我闻》唱诵版 32 品，般若波罗蜜，佛学经典
-](https://www.bilibili.com/video/BV18p4y1J7JZ){:target="_blank"}**
+- **[【金刚经完整版】刀郎-罗林《如是我闻》唱诵版 32 品，般若波罗蜜，佛学经典](https://www.bilibili.com/video/BV18p4y1J7JZ){:target="_blank"}**
 
 ## 金刚经 第一品 法会因由分
 
