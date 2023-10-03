@@ -12,7 +12,7 @@ platforms:
     icon: "fab fa-linkedin"
     link: "https://www.linkedin.com/sharing/share-offsite/?url=URL"
   - type: Twitter
-    icon: "fab fa-twitter"
+    icon: "fa-brands fa-x-twitter"
     link: "https://twitter.com/intent/tweet?text=TITLE&url=URL"
 
   # -

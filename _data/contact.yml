@@ -9,7 +9,7 @@
   noblank: true # open link in current tab
 - type: photo
   icon: "fas fa-camera"
-  url: "http://photo.renkaigis.cn"
+  url: "https://photo.renkaigis.cn"
 # -
 #   type: rss
 #   icon: 'fas fa-rss'
