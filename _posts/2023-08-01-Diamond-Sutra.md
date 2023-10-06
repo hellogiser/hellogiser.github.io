@@ -3,6 +3,8 @@ title: 《能断金刚般若波罗蜜经》 - 姚秦鸠摩罗什译 - 罗林唱
 date: 2023-08-01 08:08:08 +0800
 categories: [金刚经]
 tags: [金刚经]     # TAG names should always be lowercase
+image: 
+     path: /2023-08-01-Diamond-Sutra/Buddha.jpg
 ---
 
 《金刚经》，全称《金刚般若波罗蜜经》、《能断金刚般若波罗蜜多经》，是大乘佛教般若部经典之一，被尊为经中之王。
@@ -29,15 +31,19 @@ tags: [金刚经]     # TAG names should always be lowercase
 
 8. [【刀郎】罗林《如是我闻》唱诵版，金刚经第18品](https://www.bilibili.com/video/BV1CV4y1Y7Xu){:target="_blank"}
 
-1. [【刀郎】罗林《如是我闻》唱诵版，金刚经第19-21品](https://www.bilibili.com/video/BV11p4y1g7RM){:target="_blank"}
+9. [【刀郎】罗林《如是我闻》唱诵版，金刚经第19-21品](https://www.bilibili.com/video/BV11p4y1g7RM){:target="_blank"}
 
-1.  [【刀郎】罗林《如是我闻》唱诵版，金刚经第22-25品](https://www.bilibili.com/video/BV1kF411y7wB){:target="_blank"}
+10. [【刀郎】罗林《如是我闻》唱诵版，金刚经第22-25品](https://www.bilibili.com/video/BV1kF411y7wB){:target="_blank"}
 
-1.  [【刀郎】罗林《如是我闻》唱诵版，金刚经第26-29品](https://www.bilibili.com/video/BV14P411s795){:target="_blank"}
+11. [【刀郎】罗林《如是我闻》唱诵版，金刚经第26-29品](https://www.bilibili.com/video/BV14P411s795){:target="_blank"}
 
-1.  [【刀郎】罗林《如是我闻》唱诵版，金刚经第30-32品](https://www.bilibili.com/video/BV1q84y1o7JM){:target="_blank"}
+12. [【刀郎】罗林《如是我闻》唱诵版，金刚经第30-32品](https://www.bilibili.com/video/BV1q84y1o7JM){:target="_blank"}
 
 - **[【金刚经完整版】刀郎-罗林《如是我闻》唱诵版 32 品，般若波罗蜜，佛学经典](https://www.bilibili.com/video/BV18p4y1J7JZ){:target="_blank"}**
+
+> 【音频下载】
+
+- 百度网盘：[https://pan.baidu.com/s/1rDPCHx7i2cHXwaQg1PQDUQ?pwd=tkdx](https://pan.baidu.com/s/1rDPCHx7i2cHXwaQg1PQDUQ?pwd=tkdx)  提取码：tkdx 
 
 ## 金刚经 第一品 法会因由分
 
