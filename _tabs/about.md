@@ -24,4 +24,4 @@ order: 4
 <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="http://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank">Download CV</a>
 
 <!-- ![](../assets/mine/about.jpg) -->
-<img src="../assets/mine/about.jpg" width="90%"/>
+<img src="/mine/about.jpg" width="90%"/>

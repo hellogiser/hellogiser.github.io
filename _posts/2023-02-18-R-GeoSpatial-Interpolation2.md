@@ -3,6 +3,8 @@ title: 地统计学空间插值【R】
 date: 2023-02-20 12:34:12 +0800
 categories: [R, Spatial Interpolate]
 tags: [Spatial Interpolate, R, Spatial Analysis]     # TAG names should always be lowercase
+image:
+     path: /2023-02-18-R-GeoSpatial-Interpolation/3_6_4.png
 ---
 
 
@@ -87,7 +89,7 @@ head(v.cloud)
 plot(v.cloud, main = "Variogram cloud", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_1.png)
 
 变异函数云显示了所有的点对，但很难检验空间相关性的一般模式。为了检查空间相关性，我们将计算经验变异函数，它将云组织成箱，就像直方图一样。
 
@@ -120,7 +122,7 @@ v
 plot(v, main = "Variogram - default", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_2.png)
 
 我们可以将 cutoff (最大间隔) 设置为用 **cutoff** 可选参数指定，将 bin width 与 width 可选参数指定为 variogram 方法。
 
@@ -135,7 +137,7 @@ v.cut<-variogram(SOC ~ 1, train, cutoff=500000, width=500000/20)
 plot(v.cut, main = "Variogram with cutoff and fixed width", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_3.png)
 
 ### 各向异性变异函数
 
@@ -153,7 +155,7 @@ plot(v.map, col.regions = bpy.colors(64),
      ylab="y")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_4.png)
 
 ### 方向变异函数
 
@@ -169,7 +171,7 @@ plot(variogram(SOC ~ 1, train,
                pch = 20, col = "blue")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_5.png)
 
 ### 拟合变异函数模型
 
@@ -183,7 +185,7 @@ plot(variogram(SOC ~ 1, train,
 show.vgms()
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_6.png)
 
 
 最常见的变异函数模型主要有线性模型、球形模型、指数模型和高斯模型等。这些模型的数学表达式如下:
@@ -209,7 +211,7 @@ plot(v, pl=F, model=m.exp.f,col="black", cex=1, lwd=0.5,lty=1,pch=20,
      main="Variogram models - Exponential",xlab="Distance (m)",ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_7.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_7.png)
 
 上图显示了土壤 SOC 的实验变异函数和拟合模型。SOC 的变异函数显示出明显的空间依赖性与有界的sill，并且与指数模型非常吻合。SOC 的方差随着滞后距离的增加而稳定地增加，并且在 148458.6m 的范围内慢慢的接近其门槛，并且自相关可以扩展到 3X148458.6m 的有效范围 (在指数模型中是范围的3倍)。
 
@@ -231,7 +233,7 @@ plot(v, pl=F, model=m.sph.f,col="black", cex=1, lwd=0.5,lty=1,pch=20,
      main="Variogram models - Spherical",xlab="Distance (m)",ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_8.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_8.png)
 
 在 324339.6m 范围内，SOC 的变差函数与球形模型拟合较好，且边界层比指数模型更有界。
 
@@ -269,7 +271,7 @@ hist(train$SOC,
      main= "Distribution of SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_9.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_9.png)
 
 ```R
 skewness(train$SOC) 
@@ -297,7 +299,7 @@ train$logSOC<-log10(train$SOC)
 hist(train$logSOC, main="Log10 transformed SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_10.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_10.png)
 
 ```R
 skewness(train$logSOC)
@@ -325,7 +327,7 @@ hist(train$SOC.bc,
      main="Box-Cox Transformation of SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_11.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_11.png)
 
 ```R
 skewness(train$SOC.bc)
@@ -343,7 +345,7 @@ v.bc<-variogram(SOC.bc~ 1, data = train, cloud=F)
 plot(v.bc)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_12.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_12.png)
 
 ```R
 # Intial parameter set by eye esitmation
@@ -366,7 +368,7 @@ plot(v.bc, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_13.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_13.png)
 
 ### 嵌套模型拟合
 
@@ -394,7 +396,7 @@ vmf <- fit.variogram(v, vm)
 plot(v,model=vmf)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_14.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_14.png)
 
 #### 远程结构
 
@@ -426,7 +428,7 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_15.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_15.png)
 
 ## 克里金插值
 
@@ -559,7 +561,7 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_3_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_3_1.png)
 
 #### 点或准时克里金法
 
@@ -659,7 +661,7 @@ scale_fill_gradientn("", colours = c("blue",  "green","yellow", "orange"))+
 grid.arrange(p1,p2, ncol = 2)  # Multiplot 
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_3_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_3_2.png)
 
 上图显示了土壤 SOC 的插值图，在每个预测网格上都具有相关的误差。OK 预测图显示了  SOC 浓度的全球模式和热点位置。kriging 方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。该 kriging 方差也取决于 co 方差模型，但与数据值无关。
 
@@ -725,7 +727,7 @@ scale_fill_gradientn("SOC", colours = c("orange", "yellow", "green",  "sky blue"
 grid.arrange(p3,p4, ncol = 2)  # Multiplot 
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_3_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_3_3.png)
 
 ### 泛克里金
 
@@ -794,7 +796,7 @@ scale_fill_gradientn("", colours = c("orange", "yellow", "green",  "sky blue","b
    theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_4_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_4_1.png)
 
 #### 变异函数建模
 
@@ -831,7 +833,7 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-[](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_4_2.png)
+[](/2023-02-18-R-GeoSpatial-Interpolation/3_4_2.png)
 
 #### 克里金预测
 
@@ -926,7 +928,7 @@ scale_fill_gradientn("", colours = c("blue",  "green","yellow", "orange"))+
 grid.arrange(p1,p2, ncol = 2)  # Multiplot
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_4_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_4_3.png)
 
 上图显示了土壤 SOC 的插值图，在每个预测网格上都具有相关的误差。UK 预测图显示了 SOC 浓度的全球模式和热点位置。kriging 方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。该 kriging 方差也取决于 co 方差模型，但与数据值无关。
 
@@ -1048,7 +1050,7 @@ p2<-plot(v.ndvi, pl=F, model=m.f.ndvi, main="NDVI")
 grid.arrange(p1, p2, ncol = 2)  # Multiplot 
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_5_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_5_1.png)
 
 ##### 交叉变异函数
 
@@ -1068,7 +1070,7 @@ v.cross <- variogram(g)
 plot(v.cross, pl=F)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_5_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_5_2.png)
 
 我们将在 gstat 对象中添加变异函数模型，并使用协区域化的线性模型对其进行拟合。通过用一个模型填充所有框架 (使用 fill.all = T 参数)，这些条件会自动满足。
 
@@ -1111,7 +1113,7 @@ g
 plot(variogram(g), model=g$model)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_5_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_5_3.png)
 
 ##### 网格位置的协同克里金法预测
 
@@ -1214,7 +1216,7 @@ scale_fill_gradientn("", colours = c("blue",  "green","yellow", "orange"))+
 grid.arrange(p3,p4, ncol = 2)  # Multiplot
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_5_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_5_4.png)
 
 上图显示了土壤 SOC 的插值图，在每个预测网格上都具有相关的误差。CK 预测图显示了 SOC 浓度的全球模式和热点位置。kriging 方差在未采样位置中较高，因为方差取决于采样位置附近方差较低的采样位置的几何形状。
 
@@ -1364,7 +1366,7 @@ plot(v.glm, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_1.png)
 
 ##### 网格位置的GLM预测
 
@@ -1480,7 +1482,7 @@ glm4<-ggR(RK.GLM.SOC, geom_raster = TRUE) +
 grid.arrange(glm1,glm2,glm3,glm4, ncol = 4)  # Multiplot 
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_2.png)
 
 #### 随机森林
 
@@ -1551,7 +1553,7 @@ plot(v.rf, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_3.png)
 
 ##### 网格位置的预测
 
@@ -1674,13 +1676,13 @@ rf4<-ggR(RK.RF.SOC, geom_raster = TRUE) +
 grid.arrange(rf1,rf2,rf3,rf4, ncol = 4)  # Multiplot
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_4.png)
 
 #### 元集成机器学习
 
 集成机器学习方法使用多种学习算法来获得比从任何组成学习算法获得的更好的预测性能。许多流行的现代机器学习算法都是集合。例如，随机森林和梯度提升机都是集合学习器。但是，堆叠泛化或堆叠或超级学习 (Wolpert，1992) 引入了元学习器的概念，该概念将多个强大的，不同的机器学习模型集合或组合在一起以获得更好的预测。在这种建模方法中，首先训练每个基本级别模型，然后在基本级别模型的输出上训练元模型。基本级别模型通常由不同的学习算法组成，因此堆叠集合通常是异构的。
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_5.png)
 
 我们将 GLM 和 RF 回归模型(子模型)叠加，建立随机森林 (RF) 回归模型来预测 SOC。
 
@@ -1739,7 +1741,7 @@ dotplot(results.all,
         between = list(x = 2), layout=c(3,1))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_6.png)
 
 ##### 通过叠加来组合几个预测模型
 
@@ -1815,7 +1817,7 @@ plot(v.stack, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_7.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_7.png)
 
 ##### 网格位置的预测
 
@@ -1943,7 +1945,7 @@ s4<-ggR(RK.stack.SOC, geom_raster = TRUE) +
 grid.arrange(s1,s2,s3,s4, ncol = 4)  # Multiplot 
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_6_8.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_6_8.png)
 
 ### 指示克里金
 
@@ -1999,7 +2001,7 @@ qqline(df$As, col = "steelblue", lwd = 2)
 par(mfrow=c(1,1))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_1.png)
 
 ##### 创建 SPDF
 
@@ -2068,7 +2070,7 @@ spplot(ik.df, zcol = "As", col.regions = c("green", "orange", "red"), cex=.5,
        main = "Groundwater As  (ppb)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_2.png)
 
 ```R
 p1<-spplot(ik.df, zcol = "ik.50", col.regions = c("green", "red"), cex=.5,
@@ -2078,7 +2080,7 @@ p2<-spplot(ik.df, zcol = "ik.50", col.regions = c("green", "red"), cex=.5,
 grid.arrange(p1, p2, ncol=2)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_3.png)
 
 ##### 指示变异函数
 
@@ -2131,7 +2133,7 @@ v2<-plot(v50, pl=F,
 grid.arrange(v1, v2, nrow = 1)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_4.png)
 
 ##### 交叉验证
 
@@ -2222,7 +2224,7 @@ plot(coordinates(cv.50), asp = 1, pch=21, col = ifelse(cv.50$observed,
 par(mfrow=c(1,1))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_5.png)
 
 ##### 网格位置的 IK 预测
 
@@ -2363,4 +2365,4 @@ ik.plot.50<-levelplot(p50,
 grid.arrange(ik.plot.10, ik.plot.50, nrow = 1)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_7_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_7_6.png)

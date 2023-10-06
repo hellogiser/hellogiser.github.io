@@ -3,6 +3,8 @@ title: 空间插值的确定性方法【R】
 date: 2023-02-18 12:34:12 +0800
 categories: [R, Spatial Interpolate]
 tags: [Spatial Interpolate, R, Spatial Analysis]     # TAG names should always be lowercase
+image: 
+     path: /2023-02-18-R-GeoSpatial-Interpolation/3_1_9.png  
 ---
 
 
@@ -118,7 +120,8 @@ summary(model.lm)
 spplot(model.lm ,"var1.pred",
        main= "1st Order Trend Surface")
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_1.png)
+<!-- ![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_1.png) -->
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_1.png)
 
 ### 二次拟合
 
@@ -161,7 +164,7 @@ summary(model.quad)
 spplot(model.quad ,"var1.pred",
        main= "2nd Order Trend Surface")
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_2.png)
 
 ## 邻近度分析-泰森多边形
 
@@ -185,7 +188,7 @@ SPDF <- SpatialPointsDataFrame(coords = xy, data=SOC)
 v <- voronoi(SPDF)
 plot(v)
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_3.png)
 
 绘图看起来不太好，让我们限制在GP州的边界内。
 
@@ -203,7 +206,7 @@ spplot(v.gp, 'SOC',
        main= "Thiessen polygons (Voronoi)",
        col.regions=rev(get_col_regions()))
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_4.png)
 
 现在将这个 Voronoi 多边形转换为栅格(10 km x 10 km)
 
@@ -227,7 +230,7 @@ ggR(vr, geom_raster = TRUE) +
    ggtitle("Thiessen polygons (Voronoi) of SOC")+
    theme(plot.title = element_text(hjust = 0.5))
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_5.png)
 
 ## 最近邻插值
 
@@ -263,7 +266,7 @@ ggR(nn.pred, geom_raster = TRUE) +
    ggtitle("Nearest Neighbour\n Predicted SOC")+
    theme(plot.title = element_text(hjust = 0.5))
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_6.png)
 
 ## 反距离加权插值
 
@@ -324,7 +327,7 @@ ggR(IDW.pred, geom_raster = TRUE) +
    theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_7.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_7.png)
 
 ## 薄板样条插值
 
@@ -337,7 +340,7 @@ m <- Tps(coordinates(train), train$SOC)
 tps <- interpolate(r, m)  
 plot(tps)
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_8.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_8.png)
 
 ```R
 tps <- raster::mask(tps,bd) # mask out 
@@ -356,7 +359,7 @@ ggR(tps, geom_raster = TRUE) +
    ggtitle("Thin Plate Spline\n Predicted SOC")+
    theme(plot.title = element_text(hjust = 0.5))
 ```
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_1_9.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_1_9.png)
 
 # 地统计学插值
 
@@ -436,7 +439,7 @@ head(v.cloud)
 plot(v.cloud, main = "Variogram cloud", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_1.png)
 
 变异函数云显示了所有的点对，但很难检验空间相关性的一般模式。为了检查空间相关性，我们将计算经验变异函数，它将云组织成箱，就像直方图一样。
 
@@ -469,7 +472,7 @@ v
 plot(v, main = "Variogram - default", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_2.png)
 
 我们可以将 cutoff (最大间隔) 设置为用 **cutoff** 可选参数指定，将 bin width 与 width 可选参数指定为 variogram 方法。
 
@@ -484,7 +487,7 @@ v.cut<-variogram(SOC ~ 1, train, cutoff=500000, width=500000/20)
 plot(v.cut, main = "Variogram with cutoff and fixed width", xlab = "Separation distance (m)")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_3.png)
 
 ### 各向异性变异函数
 
@@ -502,7 +505,7 @@ plot(v.map, col.regions = bpy.colors(64),
      ylab="y")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_4.png)
 
 ### 方向变异函数
 
@@ -518,7 +521,7 @@ plot(variogram(SOC ~ 1, train,
                pch = 20, col = "blue")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_5.png)
 
 ### 拟合变异函数模型
 
@@ -532,7 +535,7 @@ plot(variogram(SOC ~ 1, train,
 show.vgms()
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_6.png)
 
 
 最常见的变异函数模型主要有线性模型、球形模型、指数模型和高斯模型等。这些模型的数学表达式如下:
@@ -558,7 +561,7 @@ plot(v, pl=F, model=m.exp.f,col="black", cex=1, lwd=0.5,lty=1,pch=20,
      main="Variogram models - Exponential",xlab="Distance (m)",ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_7.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_7.png)
 
 上图显示了土壤 SOC 的实验变异函数和拟合模型。SOC 的变异函数显示出明显的空间依赖性与有界的sill，并且与指数模型非常吻合。SOC 的方差随着滞后距离的增加而稳定地增加，并且在 148458.6m 的范围内慢慢的接近其门槛，并且自相关可以扩展到 3X148458.6m 的有效范围 (在指数模型中是范围的3倍)。
 
@@ -580,7 +583,7 @@ plot(v, pl=F, model=m.sph.f,col="black", cex=1, lwd=0.5,lty=1,pch=20,
      main="Variogram models - Spherical",xlab="Distance (m)",ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_8.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_8.png)
 
 在 324339.6m 范围内，SOC 的变差函数与球形模型拟合较好，且边界层比指数模型更有界。
 
@@ -618,7 +621,7 @@ hist(train$SOC,
      main= "Distribution of SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_9.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_9.png)
 
 ```R
 skewness(train$SOC) 
@@ -646,7 +649,7 @@ train$logSOC<-log10(train$SOC)
 hist(train$logSOC, main="Log10 transformed SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_10.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_10.png)
 
 ```R
 skewness(train$logSOC)
@@ -674,7 +677,7 @@ hist(train$SOC.bc,
      main="Box-Cox Transformation of SOC")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_11.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_11.png)
 
 ```R
 skewness(train$SOC.bc)
@@ -692,7 +695,7 @@ v.bc<-variogram(SOC.bc~ 1, data = train, cloud=F)
 plot(v.bc)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_12.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_12.png)
 
 ```R
 # Intial parameter set by eye esitmation
@@ -715,7 +718,7 @@ plot(v.bc, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_13.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_13.png)
 
 ### 嵌套模型拟合
 
@@ -743,7 +746,7 @@ vmf <- fit.variogram(v, vm)
 plot(v,model=vmf)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_14.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_14.png)
 
 #### 远程结构
 
@@ -775,4 +778,4 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_2_15.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_2_15.png)

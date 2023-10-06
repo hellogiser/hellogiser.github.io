@@ -3,13 +3,15 @@ title: 空间插值预测质量评估【R】
 date: 2023-02-23 12:34:12 +0800
 categories: [R, Spatial Interpolate]
 tags: [Spatial Interpolate, R, Spatial Analysis]     # TAG names should always be lowercase
+image:
+     path: /2023-02-18-R-GeoSpatial-Interpolation/3_8_8.png
 ---
 
 空间插值或预测模型的准确性至关重要，因为它决定了插值值的质量。与空间预测的准确性评估相比，开发空间预测模型要容易得多，但是通常情况下，空间预测模型仍然未知。
 
 空间预测质量的评价措施是: 具有 kriging 方差的残差的`平均误差 (ME)`，`平均绝对误差 (MAE)`，`均方根误差 (RMSE)` 和 `均方偏差比 (MSDR)` ，可以计算为:
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_1.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_1.png)
 
 在本练习中，我们将使用以下三种方法评估普通克里金法预测的质量:
 
@@ -119,7 +121,7 @@ summary(cv)
 bubble(cv, zcol = "residual", maxsize = 2.0,  main = "K-fold Cross-validation residuals")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_2.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_2.png)
 
 ```R
 # Mean Error (ME)
@@ -173,7 +175,7 @@ summary(lm.cv)
 par(mfrow=c(1,1))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_3.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_3.png)
 
 ### 留一交叉验证
 
@@ -332,7 +334,7 @@ test$residual<-(test$SOC.bc-test$SOC.pred)
 bubble(test, zcol = "residual", maxsize = 2.0,  main = "Residuals at Test Data")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_4.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_4.png)
 
 ### 误差
 
@@ -398,7 +400,7 @@ abline(0, 1, col="red")
 abline(lm.val, col = "green")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_5.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_5.png)
 
 ## 空间不确定性的条件模拟
 
@@ -464,7 +466,7 @@ plot(v, pl=F,
      ylab="Semivariance")
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_6.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_6.png)
 
 ### 普通克里金
 
@@ -520,7 +522,7 @@ lines(variogramLine(fit.variogram(v,  m.f),
 maxdist = max(v$dist)), col = "red",  lwd=2.0)
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_7.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_7.png)
 
 #### 逆变换
 
@@ -569,7 +571,7 @@ sp.layout=list(bound),
 height = 600, width = 600, interval = .5, outdir = getwd())
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/animation.gif)
+![](/2023-02-18-R-GeoSpatial-Interpolation/animation.gif)
 
 ### 局部不确定性的度量
 
@@ -596,7 +598,7 @@ spplot(grid.xy, c(4:5), sp.layout=list(bound), col.regions=col(20),
        names.attr = c("Ordinary Kriging", "E-type Estimates"))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_8.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_8.png)
 
 100 实现的普通预测和 E 型估计并不相同，尽管两者都是最小二乘标准的最佳估计。
 
@@ -607,7 +609,7 @@ spplot(grid.xy, c("q10","Median","q90"), sp.layout=list(bound), col.regions=col(
        names.attr = c("0.1-quantile", "Median","0.9 Quantile"), layout=c(3,1))
 ```
 
-![](../../assets/img/2023-02-18-R-GeoSpatial-Interpolation/3_8_9.png)
+![](/2023-02-18-R-GeoSpatial-Interpolation/3_8_9.png)
 
 0.1 分位数图的高土壤碳 (黄色部分) 表示未知 SOC 浓度肯定较大的区域，而 0.9 图的低值部分 (深黄色) SOC 浓度肯定较小。
 

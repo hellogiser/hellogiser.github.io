@@ -81,10 +81,10 @@ theme_mode: # [light|dark]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn:
+img_cdn: "https://notes.renkaigis.cn/assets/img"
 
 # the avatar on sidebar, support local or CORS resources
-avatar: /assets/mine/avatar.jpg
+avatar: /mine/avatar.jpg
 
 # boolean type, the global switch for ToC in posts.
 toc: true
@@ -162,7 +162,7 @@ defaults:
       layout: page
       permalink: /:title/
   - scope:
-      path: assets/img/favicons
+      path: /favicons
     values:
       swcache: true
   - scope:
