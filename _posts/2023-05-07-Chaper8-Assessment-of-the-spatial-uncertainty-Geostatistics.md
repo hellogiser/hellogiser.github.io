@@ -3,6 +3,7 @@ title: Chaper8 Assessment of spatial uncertainty - Geostatistics for Natural Res
 date: 2023-04-22 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # Assessment of spatial uncertainty

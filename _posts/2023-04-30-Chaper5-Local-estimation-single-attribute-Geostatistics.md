@@ -3,6 +3,7 @@ title: Chaper5 Local estimation&#58; Accounting for a single sttribute - Geostat
 date: 2023-04-19 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # Local estimation: Accounting for a single attribute

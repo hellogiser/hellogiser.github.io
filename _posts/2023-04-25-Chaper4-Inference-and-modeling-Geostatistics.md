@@ -3,6 +3,7 @@ title: Chaper4 Inference and modeling - Geostatistics for Natural Resources Eval
 date: 2023-04-18 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # Inference and modeling

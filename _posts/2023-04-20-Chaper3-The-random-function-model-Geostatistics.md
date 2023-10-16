@@ -3,6 +3,7 @@ title: Chaper3 The random function model - Geostatistics for Natural Resources E
 date: 2023-04-15 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # The random function model

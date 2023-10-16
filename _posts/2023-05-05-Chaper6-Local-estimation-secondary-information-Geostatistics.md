@@ -3,6 +3,7 @@ title: Chaper6 Local estimation&#58; Accounting for a secondary inforamtion - Ge
 date: 2023-04-20 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # Local estimation&#58; Accounting for a secondary inforamtion

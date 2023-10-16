@@ -3,6 +3,7 @@ title: Chaper7 Assessment of local uncertainty - Geostatistics for Natural Resou
 date: 2023-04-21 15:12:56 +0800
 categories: [Geostatistics]
 tags: [Geostatistics]     # TAG names should always be lowercase
+hidden: true
 ---
 
 # Assessment of local uncertainty
