@@ -25,4 +25,4 @@ order: 4
 
 <!-- ![](../assets/mine/about.jpg) -->
 <!-- <img src="/mine/about.jpg" width="90%"/> -->
-<img src="/mine/about.jpg"/>
+<img src="/mine/about.png"/>
