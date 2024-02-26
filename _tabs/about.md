@@ -11,6 +11,9 @@ order: 4
     padding-bottom: 0rem;
 }
 
+.tail-wrapper{
+    padding-top: 20rem;
+}
 </style>
 
 ## **Kai Ren**
@@ -20,8 +23,8 @@ order: 4
 <b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn"  target="_blank">Click for More Info (Resume)</a>
-
-<i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank">Download CV</a>
+ &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; 
+ <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank">Download CV</a>
 
 <!-- ![](../assets/mine/about.jpg) -->
 <!-- <img src="/mine/about.jpg" width="90%"/> -->
