@@ -19,10 +19,14 @@ order: 4
 
 <b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
-<i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="http://resume.renkaigis.cn"  target="_blank">Click for More Information</a>
+<i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn"  target="_blank">Click for More Info (Resume)</a>
 
-<i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="http://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank">Download CV</a>
+<i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank">Download CV</a>
 
 <!-- ![](../assets/mine/about.jpg) -->
 <!-- <img src="/mine/about.jpg" width="90%"/> -->
 <img src="/mine/about.png"/>
+
+#### Links
+
+<i class="fa fa-globe" style="color: green"></i>&nbsp;&nbsp;<a href="https://yongzesong.com"  target="_blank" style="text-decoration: none;">Dr. Yongze Song</a>
