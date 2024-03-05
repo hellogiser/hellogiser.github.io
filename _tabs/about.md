@@ -32,4 +32,6 @@ order: 4
 
 #### Links
 
-<i class="fa fa-globe" style="color: green"></i>&nbsp;&nbsp;<a href="https://yongzesong.com"  target="_blank" style="text-decoration: none;">Dr. Yongze Song</a>
+<i class="fa fa-layer-group" style="color: darkblue"></i>&nbsp;&nbsp;<a href="https://yongzesong.com"  target="_blank" style="text-decoration: none;">Dr. Yongze Song</a>
+&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
+<i class="fa fa-seedling" style="color: green"></i>&nbsp;&nbsp;<a href="https://www.agrivy.com/"  target="_blank" style="text-decoration: none;">Prof. Qiang Yu</a>
