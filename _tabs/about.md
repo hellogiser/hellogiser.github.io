@@ -34,4 +34,4 @@ order: 4
 
 <i class="fa fa-layer-group" style="color: darkblue"></i>&nbsp;&nbsp;<a href="https://yongzesong.com"  target="_blank" style="text-decoration: none;">Dr. Yongze Song</a>
 &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
-<i class="fa fa-seedling" style="color: green"></i>&nbsp;&nbsp;<a href="https://www.agrivy.com/"  target="_blank" style="text-decoration: none;">Prof. Qiang Yu</a>
+<i class="fa fa-seedling" style="color: green"></i>&nbsp;&nbsp;<a href="https://people.ucas.ac.cn/~yuqiang"  target="_blank" style="text-decoration: none;">Prof. Qiang Yu</a>
