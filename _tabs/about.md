@@ -22,9 +22,9 @@ order: 4
 
 <b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank" style="border-bottom:0px"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
-<i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn"  target="_blank" style="border-bottom:0px">Click for More Info (Resume)</a>
+<i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="https://cv.renkaigis.cn"  target="_blank" style="border-bottom:0px">Click for More Info (Resume)</a>
  &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; 
- <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://resume.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank" style="border-bottom:0px">Download CV</a>
+ <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://cv.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank" style="border-bottom:0px">Download CV</a>
 
 <!-- ![](../assets/mine/about.jpg) -->
 <!-- <img src="/mine/about.jpg" width="90%"/> -->
@@ -34,4 +34,4 @@ order: 4
 
 <i class="fa fa-layer-group" style="color: darkblue"></i>&nbsp;&nbsp;<a href="https://yongzesong.com"  target="_blank" style="border-bottom:0px">Dr. Yongze Song</a>
 &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
-<i class="fa fa-seedling" style="color: green"></i>&nbsp;&nbsp;<a href="https://people.ucas.ac.cn/~yuqiang"  target="_blank" style="border-bottom:0px">Prof. Qiang Yu</a>
+<i class="fa fa-seedling" style="color: green"></i>&nbsp;&nbsp;<a href="http://papers.agrivy.com/"  target="_blank" style="border-bottom:0px">Prof. Qiang Yu</a>
