@@ -7,8 +7,7 @@ image:
      path: /2025-04-10-Zotero-Onedrive/00.png  
 ---
 
-
-**界面截图主要以 Mac 为例：**
+**界面截图主要以 Mac 为例，Windows 可供参考，原理是一样的：**
 
 1. *Zotero* -> *Setting* -> *Sync*，登录自己的账号，取消勾选 `File Syncing` 的两个选框。
 
