@@ -19,7 +19,7 @@ image:
 
 3. *Data Directory Location* 的目录可以保持默认，也可以自定义个目录，建议默认。（这一步可以不用修改）
 
-4. 打开第三步中的目录，将原有的 `sorage` 文件夹**剪切**到刚才设置的 Onedrive 文件夹中，即剪切到 `C:\Users\XXX\OneDrive-XXX\Zotero\storage` 中。（注意：第三步中的 Zotero 文件夹下不要出现 storage 文件夹。）
+4. 打开第三步中的目录，将原有的 `storage` 文件夹**剪切**到刚才设置的 Onedrive 文件夹中，即剪切到 `C:\Users\XXX\OneDrive-XXX\Zotero\storage` 中。（注意：第三步中的 Zotero 文件夹下不要出现 storage 文件夹。）
 
      ![](/2025-04-10-Zotero-Onedrive/03.png)
 
