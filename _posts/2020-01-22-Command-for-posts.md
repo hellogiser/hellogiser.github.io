@@ -59,24 +59,24 @@ By default, the image is centered, but you can specify the position by using one
 - **Normal position**
 
 ```markdown
-![Desktop View](/test/test_01.png){: .normal }
+![Desktop View](/2025/test_01.png){: .normal }
 ```
 
-![Desktop View](/test/test_01.png){: .normal }
+![Desktop View](/2025/test_01.png){: .normal }
 
 - **Float to the left**
 
 ```markdown
-  ![Desktop View](/test/test_01.png){: .left }
+  ![Desktop View](/2025/test_01.png){: .left }
 ```
 
-![Desktop View](/test/test_01.png){: .left }
+![Desktop View](/2025/test_01.png){: .left }
 
 
 - **Float to the right**
 
 ```markdown
-  ![Desktop View](/test/test_01.png){: .right}
+  ![Desktop View](/2025/test_01.png){: .right}
 ```
 
 ![Desktop View](/2025/test_01.png){: .right}
