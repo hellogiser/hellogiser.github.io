@@ -5,6 +5,7 @@ categories: [Ruby, Jekyll]
 tags: [Ruby, Jekyll, Github]     # TAG names should always be lowercase
 image: 
      path: /2025/04-11-00.png  
+description: 不是经验分享。是给自己的笔记，只有自己能看懂
 ---
 
 > 不是经验分享。是给自己的笔记，**只有自己能看懂**

@@ -5,6 +5,7 @@ categories: [Zotero, OneDrive]
 tags: [Zotero, OneDrive]     # TAG names should always be lowercase
 image: 
      path: /2025/04-10-00.png  
+description: 结合 OneDrive 解决 Zotero 文献（附件 pdf）同步的问题
 ---
 
 **界面截图主要以 Mac 为例，Windows 可供参考，原理是一样的：**
