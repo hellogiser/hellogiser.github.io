@@ -6,7 +6,7 @@ tags: [Chirpy, Jekyll, Github]     # TAG names should always be lowercase
 description: How to write a new post!
 math: true
 image:
-     path: /2025/test-00.png  
+     path: /2025/test_00.png  
 ---
 
 ## Promptes
