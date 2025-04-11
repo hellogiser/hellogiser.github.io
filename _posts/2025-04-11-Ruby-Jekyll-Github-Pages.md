@@ -4,7 +4,7 @@ date: 2025-04-10 15:16:12 +0800
 categories: [Ruby, Jekyll]
 tags: [Ruby, Jekyll, Github]     # TAG names should always be lowercase
 image: 
-     path: /2025-04-11-Ruby-Jekyll-Github-Pages/00.png  
+     path: /2025/04-11-00.png  
 ---
 
 > 不是经验分享。是给自己的笔记，**只有自己能看懂**
