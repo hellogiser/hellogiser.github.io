@@ -4,6 +4,7 @@ date: 2020-01-22 09:00:00 +0800
 categories: [Chirpy, Jekyll]
 tags: [Chirpy, Jekyll, Github]     # TAG names should always be lowercase
 description: How to write a new post!
+math: true
 ---
 
 ## Images
@@ -18,6 +19,7 @@ _Image Caption_
 ```
 
 ![img-description](/test/3_1_9.png)
+_Image Caption Test_
 
 ### Size
 
@@ -44,27 +46,27 @@ By default, the image is centered, but you can specify the position by using one
 - **Normal position**
 
 ```markdown
-![Desktop View](/test/3_1_9.png){: .normal }
+![Desktop View](/test/test_01.png){: .normal }
 ```
 
-![Desktop View](/test/3_1_9.png){: .normal }
+![Desktop View](/test/test_01.png){: .normal }
 
 - **Float to the left**
 
 ```markdown
-  ![Desktop View](/test/3_1_9.png){: .left }
+  ![Desktop View](/test/test_01.png){: .left }
 ```
 
-![Desktop View](/test/3_1_9.png){: .left }
+![Desktop View](/test/test_01.png){: .left }
 
 
 - **Float to the right**
 
 ```markdown
-  ![Desktop View](/test/3_1_9.png){: .right }
+  ![Desktop View](/test/test_01.png){: .right}
 ```
 
-![Desktop View](/test/3_1_9.png){: .right }
+![Desktop View](/2025/test_01.png){: .right}
 
 ### Dark/Light mode
 
@@ -111,8 +113,8 @@ The following table shows how to get the two parameters we need in a given video
 
 | **Video URL**                                     | **Platform** | **ID**          |
 |---------------------------------------------------|--------------|-----------------|
-| https://www.youtube.com/watch?v=wd-ALc7BoNc       | youtube      | wd-ALc7BoNc     |
-| https://www.bilibili.com/video/BV1Vs411b7xq       | bilibili     | BV1Vs411b7xq    |
+| [https://www.youtube.com/watch?v=wd-ALc7BoNc](https://www.youtube.com/watch?v=wd-ALc7BoNc)       | youtube      | wd-ALc7BoNc     |
+| [https://www.bilibili.com/video/BV1Vs411b7xq](https://www.bilibili.com/video/BV1Vs411b7xq)       | bilibili     | BV1Vs411b7xq    |
 | https://www.twitch.tv/videos/1634779211           | twitch       | 1634779211      |
 
 For example,
@@ -129,9 +131,7 @@ For example,
 
 If you want to embed a video file directly, use the following syntax:
 
-```liquid
-  {% include embed/video.html src='{URL}' %}
-```
+![](/2025/video_code2.png)
 
 Where `URL` is a URL to a video file e.g. `/path/to/sample/video.mp4`.
 
@@ -146,18 +146,7 @@ You can also specify additional attributes for the embedded video file. Here is 
 
 Consider an example using all of the above:
 
-```liquid
-    {%
-    include embed/video.html
-    src='/path/to/video.mp4'
-    types='ogg|mov'
-    poster='poster.png'
-    title='Demo video'
-    autoplay=true
-    loop=true
-    muted=true
-    %}
-```
+![](/2025/video_code3.png)
 
 ## Promptes
 
@@ -220,35 +209,13 @@ You may have noticed that the code language will be displayed at the top of the 
     {: file="path/to/file" }
 ```
 
+
 ```shell
 # content
 For example,
 ```
 {: file="path/to/file" }
 
-#### Liquid Codes
-
-If you want to display the **Liquid** snippet, surround the liquid code with `{% raw %}` and `{% endraw %}`:
-
-```markdown
-  {% raw %}
-  ```liquid
-  {% if product.title contains 'Pack' %}
-    This product's title contains the word Pack.
-  {% endif %}
-  ```
-  {% endraw %}
-```
-
-{% raw %}
-```liquid
-{% if product.title contains 'Pack' %}
-  This product's title contains the word Pack.
-{% endif %}
-```
-{% endraw %}
-
-Or adding `render_with_liquid: false` (Requires Jekyll 4.0 or higher) to the post’s YAML block.
 
 ## Mathematics
 
@@ -269,37 +236,64 @@ After enabling the mathematical feature, you can add math equations with the fol
 - **Inline math** (in lists) should be added with `\$$ math $$`
 
 ```markdown
-    <!-- Block math, keep all blank lines -->
+<!-- Block math, keep all blank lines -->
 
-    $$
-    LaTeX_math_expression
-    $$
+$$
+LaTeX_math_expression
+$$
 
-    <!-- Equation numbering, keep all blank lines  -->
+<!-- Equation numbering, keep all blank lines  -->
 
-    $$
-    \begin{equation}
-    LaTeX_math_expression
-    \label{eq:label_name}
-    \end{equation}
-    $$
+$$
+\begin{equation}
+	I = \frac{ n \sum\limits_{i=1}^n \sum\limits_{j=1}^n w_{ij} (x_i - \bar{x}) (x_j - \bar{x}) }{ \sum\limits_{i=1}^n \sum\limits_{j=1}^n w_{ij} \sum\limits_{i=1}^n (x_i - \bar{x})^2 }
+  \label{eq:label_name}
+\end{equation}
+$$
 
-    Can be referenced as \eqref{eq:label_name}.
+Can be referenced as \eqref{eq:label_name}.
 
-    <!-- Inline math in lines, NO blank lines -->
+<!-- Inline math in lines, NO blank lines -->
 
-    "Lorem ipsum dolor sit amet, $$ LaTeX_math_expression $$ consectetur adipiscing elit."
+"Lorem ipsum dolor sit amet, $$ LaTeX_math_expression $$ consectetur adipiscing elit."
 
-    <!-- Inline math in lists, escape the first `$` -->
+<!-- Inline math in lists, escape the first `$` -->
 
-    1. \$$ LaTeX_math_expression $$
-    2. \$$ LaTeX_math_expression $$
-    3. \$$ LaTeX_math_expression $$
+1. \$$ LaTeX_math_expression $$
+2. \$$ LaTeX_math_expression $$
+3. \$$ LaTeX_math_expression $$
 ```
 
 > Starting with `v7.0.0`, configuration options for **MathJax** have been moved to file **assets/js/data/mathjax.js**, and you can change the options as needed, such as adding [extensions](https://docs.mathjax.org/en/latest/input/tex/extensions/index.html).
 If you are building the site via `chirpy-starter`, copy that file from the gem installation directory (check with command `bundle info --path jekyll-theme-chirpy`) to the same directory in your repository.
 {: .prompt-tip }
+
+<!-- Block math, keep all blank lines -->
+
+$$
+LaTeX_math_expression
+$$
+
+<!-- Equation numbering, keep all blank lines  -->
+
+$$
+\begin{equation}
+	I = \frac{ n \sum\limits_{i=1}^n \sum\limits_{j=1}^n w_{ij} (x_i - \bar{x}) (x_j - \bar{x}) }{ \sum\limits_{i=1}^n \sum\limits_{j=1}^n w_{ij} \sum\limits_{i=1}^n (x_i - \bar{x})^2 }
+  \label{eq:label_name}
+\end{equation}
+$$
+
+Can be referenced as \eqref{eq:label_name}.
+
+<!-- Inline math in lines, NO blank lines -->
+
+"Lorem ipsum dolor sit amet, $$ LaTeX_math_expression $$ consectetur adipiscing elit."
+
+<!-- Inline math in lists, escape the first `$` -->
+
+1. \$$ LaTeX_math_expression $$
+2. \$$ LaTeX_math_expression $$
+3. \$$ LaTeX_math_expression $$
 
 ```markdown
 
