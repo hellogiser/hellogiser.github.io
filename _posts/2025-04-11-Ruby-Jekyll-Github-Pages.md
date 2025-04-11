@@ -13,7 +13,7 @@ image:
 **仅展示 Windows 环境**，Mac 部分步骤类似，命令也是相同的：
 
 
-1. 初次使用，先安装 **Ruby+Devkit**： https://rubyinstaller.org/downloads/
+1. 初次使用，先安装 **Ruby+Devkit**： [https://rubyinstaller.org/downloads/](https://rubyinstaller.org/downloads/)
 2. 安装完之后选择：```MSYS2 and MINGW development toolchain```
 3. 打开新终端：```gem install jekyll bundler```
 4. 测试jekyll是否安装成功：```jekyll -v```

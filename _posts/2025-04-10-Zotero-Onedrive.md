@@ -25,13 +25,13 @@ image:
 
 5. (**windows**)以管理员身份运行 **cmd** 命令行，在命令行里输入：
 
-     ```
+     ```bash
      mklink /J "D:\Zotero\storage" "C:\Users\***\OneDrive-XXX\Zotero\storage"
      ```
 
 6. (**Mac**)打开 **Terminal** 终端，在命令行里输入：
 
-     ```
+     ```bash
      ln -s /Users/username/Library/CloudStorage/OneDrive-XXX/Zotero/storage /Users/username/Zotero/storage
      ```
 
