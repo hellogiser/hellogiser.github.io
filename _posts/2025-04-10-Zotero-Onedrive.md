@@ -39,5 +39,5 @@ description: 结合 OneDrive 解决 Zotero 文献（附件 pdf）同步的问题
      ![](/2025/04-10-04.png)
 
 
-  > 以上步骤仅同步了 `storage` 里面的附件文件，要想同步 `styels`，`translators`，只需要将原有目录下的 `styels`，`translators`文件夹复制到 Onedrive 里对应的地方，再次运行第五或第六步的代码即可（注意**修改代码里的文件夹为对应的目录**）
+  > 以上步骤仅同步了 `storage` 里面的附件文件，要想同步 `styles`，`translators`，只需要将原有目录下的 `styles`，`translators`文件夹复制到 Onedrive 里对应的地方，再次运行第五或第六步的代码即可（注意**修改代码里的文件夹为对应的目录**）
   {: .prompt-info }
