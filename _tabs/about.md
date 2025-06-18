@@ -18,13 +18,13 @@ order: 5
 
 ## **Kai Ren**
 
-<a href="https://staffportal.curtin.edu.au/staff/profile/view/kai-ren-500cf978/" target="_blank" style="border-bottom:0px"><b>Visiting Research Associate</b></a> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E" target="_blank" style="border-bottom:0px"><b>Curtin University</b></a> - [kai.ren@curtin.edu.au](mailto:kai.ren@curtin.edu.au)
+<a href="https://staffportal.curtin.edu.au/staff/profile/view/kai-ren-500cf978/" target="_blank" style="border-bottom:0px"><b>Visiting Research Associate</b></a> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E" target="_blank" style="border-bottom:0px"><b>Curtin University</b></a> - [2023.03 ~ 2025.03]
 
 <b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank" style="border-bottom:0px"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
 
 <i class="fa fa-heart" style="color: hotpink"></i>&nbsp;&nbsp;<a href="https://cv.renkaigis.cn"  target="_blank" style="border-bottom:0px">Click for More Info (Resume)</a>
  &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp; 
- <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://cv.renkaigis.cn/assets/KaiRen_CV.pdf"  target="_blank" style="border-bottom:0px">Download CV</a>
+ <i class="fa fa-paper-plane" style="color: deepskyblue"></i>&nbsp;&nbsp;<a href="https://cv.renkaigis.cn/KaiRen_CV.pdf"  target="_blank" style="border-bottom:0px">Download CV</a>
 
 <!-- ![](../assets/mine/about.jpg) -->
 <!-- <img src="/mine/about.jpg" width="90%"/> -->
