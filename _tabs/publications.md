@@ -95,6 +95,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>International Conference: </h3>
 <ul class="disc publication_list">
+    <li><b>Ren, K.</b> , Song, Y. and Yu, Q. (2025). <a href="https://ipcannual.com/" target="_blank"
+            style="color:lightseagreen;">A Novel Geospatial Machine Learning Approach for Uncovering
+            Wheat Production Disparities: Evidence from Australia</a>. <i>The 11<sup>th</sup> International
+            Conference
+            on Innovative
+            Production and Construction (IPC2025)</i>. Perth, Australia.
+    </li>
     <li><b>Ren, K.</b> , Song, Y. and Yu, Q. (2024). <a
             href="https://agu.confex.com/agu/agu24/meetingapp.cgi/Paper/1760905" target="_blank"
             style="color:lightseagreen;">Assessing the Impact of ENSO and Indian Ocean Dipole on Australian
