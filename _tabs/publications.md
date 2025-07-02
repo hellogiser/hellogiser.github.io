@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Co-author: </h3>
 <ul class="disc publication_list">
-    <li>Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Zhao, L., Wu, P., Irregular anisotropy in surface
+    <li>Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., Irregular anisotropy in surface
         urban heat island footprint. <span class="underview">(Under Review)</span></li>
     <li>Yang, L., Luo, P.,
         Zhang, Z., Song, Y., <b>Ren, K.</b>, Zhang, C., Awange, J.,
