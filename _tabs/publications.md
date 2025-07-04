@@ -83,7 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
 <ul class="disc publication_list">
     <li>Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
             Review)</span></li>
-
     <li> Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
         quality and
         its impact on mortality risk: A longitudinal ecological study in Australia. <span
