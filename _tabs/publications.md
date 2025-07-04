@@ -49,6 +49,7 @@ ul.disc li::before {
 }
 </style>
 
+<!-- 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     // Select all UL elements with the class "publication_list"
@@ -60,20 +61,20 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-</script>
+</script> -->
 
 <h3>Author: </h3>
 <ul class="disc publication_list">
-    <li><b>Ren, K</b> ., Song, Y., Yu, Q., etc., Identifying Climate and Environmental
+    <li>[1] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., etc., Identifying Climate and Environmental
         Determinants of Spatial Disparities in Wheat Production Using a Geospatial Machine Learning
         Model. <i> **** (CAS Top Journal in Zone 1)</i>
         <span class="underview">(Under Review)</span>
     </li>
-    <li><b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
+    <li>[2] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
         <i> **** (CAS Top Journal in Zone 1)</i>
         <span class="underview">(Under Review)</span>
     </li>
-    <li><b>Ren, K</b> ., Song, Y., Yu, Q., patial outliers as a pattern measure for explaining
+    <li>[3] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., patial outliers as a pattern measure for explaining
         heterogeneity.
         <span class="underview">(Under Review)</span>
     </li>
@@ -81,21 +82,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Co-author: </h3>
 <ul class="disc publication_list">
-    <li>Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
+    <li>[1] &nbsp;Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
             Review)</span></li>
-    <li> Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
+    <li>[2] &nbsp;Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
         quality and
         its impact on mortality risk: A longitudinal ecological study in Australia. <span
             class="underview">(Under
             Review)</span></li>
-    <li>Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., Irregular anisotropy in surface
+    <li>[3] &nbsp;Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., Irregular anisotropy in surface
         urban heat island footprint. <span class="underview">(Under Review)</span></li>
-    <li>Li, L., He, Q., Shi, Y., Feng, P., Shi, L., <b>Ren, K.</b>, Yao, N., Liu, K., Harrison, M. T., Li,
+    <li>[4] &nbsp;Li, L., He, Q., Shi, Y., Feng, P., Shi, L., <b>Ren, K.</b>, Yao, N., Liu, K., Harrison, M. T., Li,
         Y., Liu,
         D. L., Huete, A., Yu, Q., Yang, G., Robustness and uncertainty in drought trend projections across
         dryland and non-dryland regions under greenhouse warming. <span class="underview">(Under
             Review)</span></li>
-    <li>Yang, L., Luo, P.,
+    <li>[5] &nbsp;Yang, L., Luo, P.,
         Zhang, Z., Song, Y., <b>Ren, K.</b>, Zhang, C., Awange, J.,
         Atkinson, P.M. and Meng, L., 2024.
         <a href="https://doi.org/10.1016/j.jag.2024.104068" target="_blank" style="color:lightseagreen;">
@@ -103,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
             MODIS aerosols: Exemplified by the case of Africa</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104068.
     </li>
-    <li>Zhang, X., Song, Y., Dewan, A., Guo, Z., Cao, X., Bie, Q., Xie, Y., Ma, X., <b>Ren, K.</b>, Zhang,
+    <li>[6] &nbsp;Zhang, X., Song, Y., Dewan, A., Guo, Z., Cao, X., Bie, Q., Xie, Y., Ma, X., <b>Ren, K.</b>, Zhang,
         H. and Xi, G., 2024. <a href="https://doi.org/10.1016/j.jag.2024.104004" target="_blank"
             style="color:lightseagreen;">Ecological influence of oasisation on peripheral regions</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104004.
@@ -112,20 +113,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>International Conference: </h3>
 <ul class="disc publication_list">
-    <li><b>Ren, K.</b> , Song, Y. and Yu, Q. (2025). <a href="https://ipcannual.com/" target="_blank"
+    <li>[1] &nbsp;<b>Ren, K.</b> , Song, Y. and Yu, Q. (2025). <a href="https://ipcannual.com/" target="_blank"
             style="color:lightseagreen;">A Novel Geospatial Machine Learning Approach for Uncovering
             Wheat Production Disparities: Evidence from Australia</a>. <i>The 11<sup>th</sup> International
             Conference
             on Innovative
             Production and Construction (IPC2025)</i>. Perth, Australia.
     </li>
-    <li><b>Ren, K.</b> , Song, Y. and Yu, Q. (2024). <a
+    <li>[2] &nbsp;<b>Ren, K.</b> , Song, Y. and Yu, Q. (2024). <a
             href="https://agu.confex.com/agu/agu24/meetingapp.cgi/Paper/1760905" target="_blank"
             style="color:lightseagreen;">Assessing the Impact of ENSO and Indian Ocean Dipole on Australian
             Bushfires Using RandomForests</a>. <i>2024 American Geophysical Union (AGU24)</i>. Washington,
         D.C.
     </li>
-    <li><b>Ren, K.</b> & Song, Y. (2023). <a href="https://yongzesong.com/cityplus-2023-proceedings/"
+    <li>[3] &nbsp;<b>Ren, K.</b> & Song, Y. (2023). <a href="https://yongzesong.com/cityplus-2023-proceedings/"
             target="_blank" style="color:lightseagreen;">Local spatial heterogeneity of Wheat Yields in
             Western Australia</a>.
         In <i>Proceedings of City+2023@Perth International Conference on Geospatial Big Data and Artificial
