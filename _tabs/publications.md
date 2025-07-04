@@ -64,20 +64,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Author: </h3>
 <ul class="disc publication_list">
-    <li><b>Ren, K</b> ., etc. Identifying Climate and Environmental
+    <li><b>Ren, K</b> ., Song, Y., Yu, Q., etc., Identifying Climate and Environmental
         Determinants of Spatial Disparities in Wheat Production Using a Geospatial Machine Learning
-        Model. <i>GIScience & Remote Sensing (CAS Top Journal in Zone 1)</i> 
-        <span class="underview">(Minor revisions and pending acceptance.)</span>
+        Model. <i> **** (CAS Top Journal in Zone 1)</i>
+        <span class="underview">(Under Review)</span>
     </li>
-    <li><b>Ren, K</b> ., etc. Second-dimension outliers for spatial prediction. <i>International Journal of Geographical Information Science (CAS Top Journal in Zone 1)</i>
-        <span class="underview">(Minor revisions and pending acceptance.)</span>
+    <li><b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
+        <i> **** (CAS Top Journal in Zone 1)</i>
+        <span class="underview">(Under Review)</span>
+    </li>
+    <li><b>Ren, K</b> ., Song, Y., Yu, Q., patial outliers as a pattern measure for explaining
+        heterogeneity.
+        <span class="underview">(Under Review)</span>
     </li>
 </ul>
 
 <h3>Co-author: </h3>
 <ul class="disc publication_list">
+    <li>Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
+            Review)</span></li>
+
+    <li> Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
+        quality and
+        its impact on mortality risk: A longitudinal ecological study in Australia. <span
+            class="underview">(Under
+            Review)</span></li>
     <li>Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., Irregular anisotropy in surface
         urban heat island footprint. <span class="underview">(Under Review)</span></li>
+    <li>Li, L., He, Q., Shi, Y., Feng, P., Shi, L., <b>Ren, K.</b>, Yao, N., Liu, K., Harrison, M. T., Li,
+        Y., Liu,
+        D. L., Huete, A., Yu, Q., Yang, G., Robustness and uncertainty in drought trend projections across
+        dryland and non-dryland regions under greenhouse warming. <span class="underview">(Under
+            Review)</span></li>
     <li>Yang, L., Luo, P.,
         Zhang, Z., Song, Y., <b>Ren, K.</b>, Zhang, C., Awange, J.,
         Atkinson, P.M. and Meng, L., 2024.
