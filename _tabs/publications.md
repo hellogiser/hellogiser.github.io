@@ -51,7 +51,7 @@ ul.disc li::before {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Select all UL elements with the class "publication-list"
+    // Select all UL elements with the class "publication_list"
     document.querySelectorAll(".publication_list").forEach((ul) => {
         let count = 1; // Start numbering from 1 for each UL
         ul.querySelectorAll("li").forEach((li) => {
