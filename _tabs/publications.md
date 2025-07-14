@@ -12,6 +12,11 @@ order: 4
     color: orange;
 }
 
+.accept {
+    text-decoration: underline;
+    color: purple;
+}
+
 i {
     color: 
 }
@@ -65,10 +70,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Author: </h3>
 <ul class="disc publication_list">
-    <li>[1] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., etc., Identifying Climate and Environmental
-        Determinants of Spatial Disparities in Wheat Production Using a Geospatial Machine Learning
-        Model. <i> **** (CAS Top Journal in Zone 1)</i>
-        <span class="underview">(Under Review)</span>
+    <li>[1] &nbsp;Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
+    Q.<sup>*</sup>(2025). <a href="https://doi.org/10.1080/15481603.2025.2533487">Identifying
+        climate and environmental determinants of spatial disparities in wheat production using a
+        geospatial
+        machine learning model</a>. <i>GIScience & Remote Sensing</i>, 62(1).
+    <span class="accept">[Top Journal in Zone 1，IF 6.9]</span>
     </li>
     <li>[2] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
         <i> **** (CAS Top Journal in Zone 1)</i>
