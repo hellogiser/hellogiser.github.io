@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Author: </h3>
 <ul class="disc publication_list">
-    <li>[1] &nbsp;Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
+    <li>[1] &nbsp;<b>Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
     Q.<sup>*</sup>(2025). <a href="https://doi.org/10.1080/15481603.2025.2533487">Identifying
         climate and environmental determinants of spatial disparities in wheat production using a
         geospatial
