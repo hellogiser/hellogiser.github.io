@@ -20,24 +20,24 @@ description: 结合 OneDrive 解决 Zotero 文献（附件 pdf）同步的问题
 
 3. *Data Directory Location* 的目录可以保持默认，也可以自定义个目录，建议默认。（这一步可以不用修改）
 
-4. 打开第三步中的目录，将原有的 `storage` 文件夹**剪切**到刚才设置的 Onedrive 文件夹中，即剪切到 `C:\Users\XXX\OneDrive-XXX\Zotero\storage` 中。（注意：第三步中的 Zotero 文件夹下不要出现 storage 文件夹。）
+4. 打开第三步中的目录，将原有的 `storage` 文件夹**【剪切】**到刚才设置的 Onedrive 文件夹中，即剪切到 `C:\Users\XXX\OneDrive-XXX\Zotero\storage` 中。（注意：第三步中的 Zotero 文件夹下不要出现 storage 文件夹。）
 
      ![](/2025/04-10-03.png)
 
 5. (**windows**)以管理员身份运行 **cmd** 命令行，在命令行里输入：
 
-     ```bash
-     mklink /J "D:\Zotero\storage" "C:\Users\***\OneDrive-XXX\Zotero\storage"
-     ```
+```bash
+mklink /J "D:\Zotero\storage" "C:\Users\***\OneDrive-XXX\Zotero\storage"
+```
 
 6. (**Mac**)打开 **Terminal** 终端，在命令行里输入：
 
-     ```bash
-     ln -s /Users/username/Library/CloudStorage/OneDrive-XXX/Zotero/storage /Users/username/Zotero/storage
-     ```
+```bash
+ln -s /Users/username/Library/CloudStorage/OneDrive-XXX/Zotero/storage /Users/username/Zotero/storage
+```
 
      ![](/2025/04-10-04.png)
 
 
-  > 以上步骤仅同步了 `storage` 里面的附件文件，要想同步 `styles`，`translators`，只需要将原有目录下的 `styles`，`translators`文件夹复制到 Onedrive 里对应的地方，再次运行第五或第六步的代码即可（注意**修改代码里的文件夹为对应的目录**）
+  > 以上步骤仅同步了 `storage` 里面的附件文件，要想同步 `styles`，`translators`，只需要将原有目录下的 `styles`，`translators`文件夹**剪切**到 Onedrive 里对应的地方，再次运行第五或第六步的代码即可（注意**修改代码里的文件夹为对应的目录**）
   {: .prompt-info }
