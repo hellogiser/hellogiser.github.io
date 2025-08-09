@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <i> **** (CAS Top Journal in Zone 1)</i>
         <span class="underview">(Under Review)</span>
     </li>
-    <li>[3] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., patial outliers as a pattern measure for explaining
+    <li>[3] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Spatial outliers as a pattern measure for explaining
         heterogeneity.
         <span class="underview">(Under Review)</span>
     </li>
