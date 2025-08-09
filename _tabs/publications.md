@@ -9,12 +9,17 @@ order: 4
 <style>
 .underview {
     text-decoration: underline;
+    border-bottom: 0px;
     color: orange;
 }
 
 .paper_title{
     text-decoration: none;
     color: lightseagreen;
+}
+
+.post-tail-wrapper .post-meta a:not(:hover), .content a:not(.img-link) {
+     border-bottom: 0px;
 }
 
 .accept {
