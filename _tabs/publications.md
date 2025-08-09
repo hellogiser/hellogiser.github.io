@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         climate and environmental determinants of spatial disparities in wheat production using a
         geospatial
         machine learning model</a>. <i>GIScience & Remote Sensing</i>, 62(1): 2533487.
-    <span class="accept">[Top Journal in Zone 1，IF 6.9]</span>
+    <span class="accept">[Top Journal in Zone 1, IF 6.9]</span>
     </li>
     <li>[2] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
         <i> **** (CAS Top Journal in Zone 1)</i>
