@@ -14,6 +14,7 @@ order: 4
 
 .paper_title{
     text-decoration: none;
+    color: lightseagreen;
 }
 
 .accept {
@@ -75,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <h3>Author: </h3>
 <ul class="disc publication_list">
     <li>[1] &nbsp;<b>Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
-    Q.<sup>*</sup>, 2025. <a href="https://doi.org/10.1080/15481603.2025.2533487" class="paper_title">Identifying
+    Q.<sup>*</sup>, 2025. <a href="https://doi.org/10.1080/15481603.2025.2533487" target="_blank" class="paper_title">Identifying
         climate and environmental determinants of spatial disparities in wheat production using a
         geospatial
         machine learning model</a>. <i>GIScience & Remote Sensing</i>, 62(1): 2533487.
@@ -110,14 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
     <li>[5] &nbsp;Yang, L., Luo, P.,
         Zhang, Z., Song, Y., <b>Ren, K.</b>, Zhang, C., Awange, J.,
         Atkinson, P.M. and Meng, L., 2024.
-        <a href="https://doi.org/10.1016/j.jag.2024.104068" target="_blank" style="color:lightseagreen;">
+        <a href="https://doi.org/10.1016/j.jag.2024.104068" target="_blank" class="paper_title">
             A spatio-temporal unmixing with heterogeneity model for the identification of remotely sensed
             MODIS aerosols: Exemplified by the case of Africa</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104068.
     </li>
     <li>[6] &nbsp;Zhang, X., Song, Y., Dewan, A., Guo, Z., Cao, X., Bie, Q., Xie, Y., Ma, X., <b>Ren, K.</b>, Zhang,
         H. and Xi, G., 2024. <a href="https://doi.org/10.1016/j.jag.2024.104004" target="_blank"
-            style="color:lightseagreen;">Ecological influence of oasisation on peripheral regions</a>.
+             class="paper_title">Ecological influence of oasisation on peripheral regions</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104004.
     </li>
 </ul>
@@ -125,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <h3>International Conference: </h3>
 <ul class="disc publication_list">
     <li>[1] &nbsp;<b>Ren, K.</b> , Song, Y. and Yu, Q. (2025). <a href="https://ipcannual.com/" target="_blank"
-            style="color:lightseagreen;">A Novel Geospatial Machine Learning Approach for Uncovering
+            class="paper_title">A Novel Geospatial Machine Learning Approach for Uncovering
             Wheat Production Disparities: Evidence from Australia</a>. <i>The 11<sup>th</sup> International
             Conference
             on Innovative
@@ -133,12 +134,12 @@ document.addEventListener("DOMContentLoaded", function () {
     </li>
     <li>[2] &nbsp;<b>Ren, K.</b> , Song, Y. and Yu, Q. (2024). <a
             href="https://agu.confex.com/agu/agu24/meetingapp.cgi/Paper/1760905" target="_blank"
-            style="color:lightseagreen;">Assessing the Impact of ENSO and Indian Ocean Dipole on Australian
+            class="paper_title">Assessing the Impact of ENSO and Indian Ocean Dipole on Australian
             Bushfires Using RandomForests</a>. <i>2024 American Geophysical Union (AGU24)</i>. Washington,
         D.C.
     </li>
     <li>[3] &nbsp;<b>Ren, K.</b> & Song, Y. (2023). <a href="https://yongzesong.com/cityplus-2023-proceedings/"
-            target="_blank" style="color:lightseagreen;">Local spatial heterogeneity of Wheat Yields in
+            target="_blank" class="paper_title">Local spatial heterogeneity of Wheat Yields in
             Western Australia</a>.
         In <i>Proceedings of City+2023@Perth International Conference on Geospatial Big Data and Artificial
             Intelligence for Cities</i>. Perth, Curtin University.
@@ -157,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </thead>
         <tbody>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GeologicalStructure.jpg" target="_blank">Structural
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GeologicalStructure.jpg" target="_blank" class="paper_title">Structural
                         Surface
                         Recognition and Intelligent Analysis System of <br> Layered Geological
                         Body</a></td>
@@ -165,13 +166,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>Jul.2019</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/1_CBBMSystem.jpg" target="_blank">Dianchi Lake
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/1_CBBMSystem.jpg" target="_blank" class="paper_title">Dianchi Lake
                         Water Body Cyanobacteria Bloom Drift Simulation System</a></td>
                 <td>2018SR955442</td>
                 <td>Nov.2018</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_LargeWaterSystem.jpg" target="_blank">Simulation
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_LargeWaterSystem.jpg" target="_blank" class="paper_title">Simulation
                         System of
                         Total Suspended Solids in Large Water Bodies</a> </td>
                 <td>2018SR798096</td>
@@ -184,20 +185,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>Aug.2017</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/2_TMASystem.jpg" target="_blank">3D Modeling and
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/2_TMASystem.jpg" target="_blank" class="paper_title">3D Modeling and
                         Analysis System of Underground Space</a> </td>
                 <td>2017SR431955</td>
                 <td>Aug.2017</td>
             </tr>
             <tr>
                 <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/5_Geo_Grid_System.jpg"
-                        target="_blank">Multi-Dimensional
+                        target="_blank" class="paper_title">Multi-Dimensional
                         Grid Adaptive Generation System For <br> Geoscience Simulation</a></td>
                 <td>2017SR374939</td>
                 <td>Jul.2017</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GMSDVSystem.jpg" target="_blank">Dynamic
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GMSDVSystem.jpg" target="_blank" class="paper_title">Dynamic
                         Visualization System For
                         Geoscience Model Simulation</a>
                 </td>
