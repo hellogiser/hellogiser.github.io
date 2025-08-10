@@ -58,10 +58,35 @@ ul.disc li::before {
 	vertical-align: middle;
 }
 
-.table-responsive {
+/* .table-responsive {
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
-}
+} */
+
+    .responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto; /* 自动布局 */
+    }
+
+    .responsive-table th, .responsive-table td {
+        padding: 8px;
+        text-align: left;
+        word-break: break-word; /* 允许长单词换行 */
+    }
+
+    /* 让表格在小屏时横向滚动 */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 在手机端减小字体 */
+    @media (max-width: 600px) {
+        .responsive-table th, .responsive-table td {
+            font-size: 14px;
+        }
+    }
 </style>
 
 <!-- 
@@ -152,61 +177,62 @@ document.addEventListener("DOMContentLoaded", function () {
 </ul>
 
 <h3>Software Copyright: </h3>
-<div class="table-responsive">
-    <table style="width: 100%; table-layout: fixed;">
+<div class="table-wrapper">
+    <table class="responsive-table">
         <thead>
             <tr>
-                <th style="width: 65%; text-align: center;">Software Name</th>
-                <th style="width: 20%;">Registration</th>
-                <th style="width: 15%;">Date</th>
+                <th>Software Name</th>
+                <th>Registration</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GeologicalStructure.jpg" target="_blank" class="paper_title">Structural
-                        Surface
-                        Recognition and Intelligent Analysis System of <br> Layered Geological
-                        Body</a></td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GeologicalStructure.jpg" target="_blank" class="paper_title">
+                    Structural Surface Recognition and Intelligent Analysis System of Layered Geological Body
+                </a></td>
                 <td>2019SR0706808</td>
                 <td>Jul.2019</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/1_CBBMSystem.jpg" target="_blank" class="paper_title">Dianchi Lake
-                        Water Body Cyanobacteria Bloom Drift Simulation System</a></td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/1_CBBMSystem.jpg" target="_blank" class="paper_title">
+                    Dianchi Lake Water Body Cyanobacteria Bloom Drift Simulation System
+                </a></td>
                 <td>2018SR955442</td>
                 <td>Nov.2018</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_LargeWaterSystem.jpg" target="_blank" class="paper_title">Simulation
-                        System of
-                        Total Suspended Solids in Large Water Bodies</a> </td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_LargeWaterSystem.jpg" target="_blank" class="paper_title">
+                    Simulation System of Total Suspended Solids in Large Water Bodies
+                </a></td>
                 <td>2018SR798096</td>
                 <td>Oct.2018</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_HydroMSystem.jpg" target="_blank">Hydrogeological
-                        Modeling and Simulation System</a> </td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_HydroMSystem.jpg" target="_blank">
+                    Hydrogeological Modeling and Simulation System
+                </a></td>
                 <td>2017SR427979</td>
                 <td>Aug.2017</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/2_TMASystem.jpg" target="_blank" class="paper_title">3D Modeling and
-                        Analysis System of Underground Space</a> </td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/2_TMASystem.jpg" target="_blank" class="paper_title">
+                    3D Modeling and Analysis System of Underground Space
+                </a></td>
                 <td>2017SR431955</td>
                 <td>Aug.2017</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/5_Geo_Grid_System.jpg"
-                        target="_blank" class="paper_title">Multi-Dimensional
-                        Grid Adaptive Generation System For <br> Geoscience Simulation</a></td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/5_Geo_Grid_System.jpg" target="_blank" class="paper_title">
+                    Multi-Dimensional Grid Adaptive Generation System For Geoscience Simulation
+                </a></td>
                 <td>2017SR374939</td>
                 <td>Jul.2017</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GMSDVSystem.jpg" target="_blank" class="paper_title">Dynamic
-                        Visualization System For
-                        Geoscience Model Simulation</a>
-                </td>
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/4_GMSDVSystem.jpg" target="_blank" class="paper_title">
+                    Dynamic Visualization System For Geoscience Model Simulation
+                </a></td>
                 <td>2017SR374929</td>
                 <td>Jul.2017</td>
             </tr>
