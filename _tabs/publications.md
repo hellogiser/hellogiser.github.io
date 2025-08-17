@@ -166,13 +166,13 @@ document.addEventListener("DOMContentLoaded", function () {
             href="https://agu.confex.com/agu/agu24/meetingapp.cgi/Paper/1760905" target="_blank"
             class="paper_title">Assessing the Impact of ENSO and Indian Ocean Dipole on Australian
             Bushfires Using RandomForests</a>. <i>2024 American Geophysical Union (AGU24)</i>. Washington,
-        D.C.
+        D.C., USA.
     </li>
     <li>[3] &nbsp;<b>Ren, K.</b> & Song, Y. (2023). <a href="https://yongzesong.com/cityplus-2023-proceedings/"
             target="_blank" class="paper_title">Local spatial heterogeneity of Wheat Yields in
             Western Australia</a>.
         In <i>Proceedings of City+2023@Perth International Conference on Geospatial Big Data and Artificial
-            Intelligence for Cities</i>. Perth, Curtin University.
+            Intelligence for Cities</i>. Perth, Curtin University, Australia.
     </li>
 </ul>
 
