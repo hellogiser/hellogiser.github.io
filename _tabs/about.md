@@ -18,7 +18,7 @@ order: 5
 /* Masonry 三列布局 */
 .gallery-masonry {
   column-count: 3;
-  column-gap: 16px;
+  column-gap: 8px;
 }
 
 @media (max-width: 1024px) { 
