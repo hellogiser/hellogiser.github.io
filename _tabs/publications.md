@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>Oct.2018</td>
             </tr>
             <tr>
-                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_HydroMSystem.jpg" target="_blank">
+                <td><a href="https://cv.renkaigis.cn/images/SoftwareCopyright/3_HydroMSystem.jpg" target="_blank" class="paper_title">
                     Hydrogeological Modeling and Simulation System
                 </a></td>
                 <td>2017SR427979</td>
