@@ -124,21 +124,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Co-author: </h3>
 <ul class="disc publication_list">
-    <li>[1] &nbsp;Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
-            Review)</span></li>
-    <li>[2] &nbsp;Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
-        quality and
-        its impact on mortality risk: A longitudinal ecological study in Australia. <span
-            class="underview">(Under
-            Review)</span></li>
-    <li>[3] &nbsp;Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., Irregular anisotropy in surface
-        urban heat island footprint. <span class="underview">(Under Review)</span></li>
-    <li>[4] &nbsp;Li, L., He, Q., Shi, Y., Feng, P., Shi, L., <b>Ren, K.</b>, Yao, N., Liu, K., Harrison, M. T., Li,
-        Y., Liu,
-        D. L., Huete, A., Yu, Q., Yang, G., Robustness and uncertainty in drought trend projections across
-        dryland and non-dryland regions under greenhouse warming. <span class="underview">(Under
-            Review)</span></li>
-    <li>[5] &nbsp;Yang, L., Luo, P.,
+    <li>[1] &nbsp;Yang, X., Song, Y., Yoo C., <b>Ren, K.</b>, Wu, P., 2025. <a
+            href="https://doi.org/10.1016/j.scs.2025.106779" target="_blank"
+            class="paper_title">Irregular anisotropy in surface urban
+            heat island footprint</a>. <i>Sustainable Cities and Society</i>, p.106779. </li>
+    <li>[2] &nbsp;Yang, L., Luo, P.,
         Zhang, Z., Song, Y., <b>Ren, K.</b>, Zhang, C., Awange, J.,
         Atkinson, P.M. and Meng, L., 2024.
         <a href="https://doi.org/10.1016/j.jag.2024.104068" target="_blank" class="paper_title">
@@ -146,11 +136,23 @@ document.addEventListener("DOMContentLoaded", function () {
             MODIS aerosols: Exemplified by the case of Africa</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104068.
     </li>
-    <li>[6] &nbsp;Zhang, X., Song, Y., Dewan, A., Guo, Z., Cao, X., Bie, Q., Xie, Y., Ma, X., <b>Ren, K.</b>, Zhang,
+    <li>[3] &nbsp;Zhang, X., Song, Y., Dewan, A., Guo, Z., Cao, X., Bie, Q., Xie, Y., Ma, X., <b>Ren, K.</b>, Zhang,
         H. and Xi, G., 2024. <a href="https://doi.org/10.1016/j.jag.2024.104004" target="_blank"
-             class="paper_title">Ecological influence of oasisation on peripheral regions</a>.
+            class="paper_title">Ecological influence of oasisation on peripheral regions</a>.
         <i>International Journal of Applied Earth Observation and Geoinformation</i>, 132, p.104004.
     </li>
+    <li>[4] &nbsp;Yang, X., Song, Y., <b>Ren, K.</b>, Wu, P., Pesudo-spatial learning. <span class="underview">(Under
+            Review)</span></li>
+    <li>[5] &nbsp;Xiao, Z., Song, Y., <b>Ren, K.</b>, Zheng, X., Zhang, Z., Wu, P., Evaluating urban greenspace
+        quality and
+        its impact on mortality risk: A longitudinal ecological study in Australia. <span
+            class="underview">(Under
+            Review)</span></li>
+    <li>[6] &nbsp;Li, L., He, Q., Shi, Y., Feng, P., Shi, L., <b>Ren, K.</b>, Yao, N., Liu, K., Harrison, M. T., Li,
+        Y., Liu,
+        D. L., Huete, A., Yu, Q., Yang, G., Robustness and uncertainty in drought trend projections across
+        dryland and non-dryland regions under greenhouse warming. <span class="underview">(Under
+            Review)</span></li>
 </ul>
 
 <h3>International Conference: </h3>
