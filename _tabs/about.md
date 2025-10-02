@@ -61,6 +61,8 @@ order: 5
 
 ## **Kai Ren**
 
+<b>PostDoc</b> - <a href="https://www.njnu.edu.cn/" style="color:#F0AD4E" target="_blank" style="border-bottom:0px"><b>Nanjing Normal University</b></a> -  [kai@njnu.edu.cn](mailto:kai@njnu.edu.cn)
+
 <a href="https://staffportal.curtin.edu.au/staff/profile/view/kai-ren-500cf978/" target="_blank" style="border-bottom:0px"><b>Visiting Research Associate</b></a> - <a href="https://www.curtin.edu.au/" style="color:#F0AD4E" target="_blank" style="border-bottom:0px"><b>Curtin University</b></a> - [2023.03 ~ 2025.03]
 
 <b>PhD Student</b> - <a href="https://www.nwafu.edu.cn/" style="color:green" target="_blank" style="border-bottom:0px"><b>Northwest A&F University (NWAFU)</b></a> - [renkaigis@gmail.com](mailto:renkaigis@gmail.com)
