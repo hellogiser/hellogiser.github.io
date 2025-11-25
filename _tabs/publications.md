@@ -105,16 +105,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h3>Author: </h3>
 <ul class="disc publication_list">
-    <li>[1] &nbsp;<b>Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
+    <li>[1] &nbsp;<b>Ren, K</b> ., Song, Y.<sup>*</sup>, Yu, Q.<sup>*</sup>, 2025. <a
+						href="https://doi.org/10.1080/13658816.2025.2580414" target="_blank"
+						class="paper_title">Second-dimension outliers for spatial
+						prediction</a>. <i>International Journal of Geographical Information Science</i>, pp.1‑28.
+        <span class="accept">[Top Journal in Zone 1, IF 5.1]</span>
+    </li>
+    <li>[2] &nbsp;<b>Ren, K.</b>, Song, Y.<sup>*</sup>, Li, L., Mancini, F., Xiao, Z., Zhang, X., Qu, R., Yu,
     Q.<sup>*</sup>, 2025. <a href="https://doi.org/10.1080/15481603.2025.2533487" target="_blank" class="paper_title">Identifying
         climate and environmental determinants of spatial disparities in wheat production using a
         geospatial
         machine learning model</a>. <i>GIScience & Remote Sensing</i>, 62(1): 2533487.
     <span class="accept">[Top Journal in Zone 1, IF 6.9]</span>
-    </li>
-    <li>[2] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Second-dimension outliers for spatial prediction.
-        <i> **** (CAS Top Journal in Zone 1)</i>
-        <span class="underview">(Under Review)</span>
     </li>
     <li>[3] &nbsp;<b>Ren, K</b> ., Song, Y., Yu, Q., Spatial outliers as a pattern measure for explaining
         heterogeneity.
